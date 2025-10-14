@@ -1,0 +1,24 @@
+# Gradle
+.gradle/
+build/
+
+# Local configuration
+local.properties
+*.iml
+
+# Compiled files
+*.apk
+*.ap_
+*.dex
+*.class
+*.jar
+*.keystore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Others
+*.log
+captures/
+outputs/

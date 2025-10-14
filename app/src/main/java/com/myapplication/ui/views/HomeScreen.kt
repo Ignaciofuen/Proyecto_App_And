@@ -82,7 +82,7 @@ fun HomeScreen(navController: NavController, appState: AppState) {
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(onClick = {navController.navigate("productos") }) {
-                Text("Productos")
+                Text("Ver catálogo de productos")
             }
         }
     }

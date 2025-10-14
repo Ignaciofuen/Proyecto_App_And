@@ -43,7 +43,8 @@ fun LoginScreen(navController: NavController, appState: AppState){
                 }
             )
         }
-    ) { padding ->
+    )
+    { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -72,21 +73,21 @@ fun LoginScreen(navController: NavController, appState: AppState){
             Button(
                 onClick = {
                     if (usuario.isBlank() || password.isBlank()){
-                        error = "Debe Ingresar usuario y contraseña"
+                        error = "Debe ingresar usuario y contraseña"
                     }else if (appState.login(usuario, password)){
                         error = ""
                         //Navego hacia la views 'NotasScreen'
                         navController.navigate("home")
                     }else{
-                        error = "Usuario y/o Contraseña incorrectos"
+                        error = "Usuario y/o contraseña incorrectos"
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Inicio de Sesión")
+                Text("Inicio de sesión")
             }
             TextButton(onClick = { navController.navigate("registro")}) {
-                Text("¿No tienes cuenta? Regístrate")
+                Text("¿No tienes cuenta? Regístrate aquí")
             }
         }
     }

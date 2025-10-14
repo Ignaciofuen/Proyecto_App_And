@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -30,7 +31,7 @@ fun RegistroScreen(navController: NavController, appState: AppState){
     var error by remember { mutableStateOf("") }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Registro de Usuario") }) }
+        topBar = { TopAppBar(title = { Text("Registro de usuario") }) }
     ) { padding ->
         Column (
             modifier = Modifier
@@ -82,7 +83,7 @@ fun RegistroScreen(navController: NavController, appState: AppState){
                         //Con los datos validados llamo al registrarUsuario()
                         //si el usuario es nuevo lo graba y retorna true
                         !appState.registrarUsuario(email, password) ->
-                            error = "El usuario ya existe"
+                            error = "El email ya se encuentra registrado"
                         else -> {
                             error = ""
                             navController.navigate("login")
@@ -92,6 +93,9 @@ fun RegistroScreen(navController: NavController, appState: AppState){
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Registrarse")
+            }
+            TextButton(onClick = { navController.navigate("login")}) {
+                Text("¿Ya tienes una cuenta creada? Inicia sesión")
             }
         }
     }
