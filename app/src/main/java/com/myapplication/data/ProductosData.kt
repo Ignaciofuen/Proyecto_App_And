@@ -16,7 +16,7 @@ val Productos = listOf(
         nombre = "PC GAMER RDY Y70 TI B04",
         precio = 2_499_000,
         imagen = R.drawable.pc2,
-        descripcion = "Intel® Core™ i9-14900KF, MSI PRO Z790-A MAX WiFi",
+        descripcion = "Intel® Core™ i9-14900KF, MSI PRO Z790-A MAX Wi-Fi",
         categoria = "PC Gamer"
     ),
     Producto(
