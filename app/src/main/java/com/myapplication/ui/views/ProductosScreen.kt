@@ -18,6 +18,9 @@ import com.myapplication.data.Productos
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.Text
+import com.myapplication.R
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -25,17 +28,27 @@ import androidx.compose.material3.IconButton
 fun ProductosScreen(navController: NavController, appState: AppState) {
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Catálogo de Productos") },
+            TopAppBar(
+                title = { Text("Catálogo de Productos") },
                 navigationIcon = {
-                    Text(
-                        text = "<-",
-                        modifier = Modifier
-                            .padding(horizontal = 12.dp)
-                            .clickable { navController.popBackStack() }
-                    )
+                    IconButton(onClick = { navController.popBackStack() }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.volver),
+                            contentDescription = "Volver"
+                        )
+                    }
+                },
+                actions = {
+                    IconButton(onClick = { navController.navigate("carrito") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.carrito),
+                            contentDescription = "Carrito"
+                        )
+                    }
                 }
-
             )
+
+
         }
 
     ) { padding ->
@@ -64,13 +77,16 @@ fun ProductosScreen(navController: NavController, appState: AppState) {
 
                             contentScale = ContentScale.Fit
                         )
-                        Spacer(Modifier.height(8.dp))
+                        Spacer(Modifier.height(6.dp))
                         Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
-                        Text("Precio: $${producto.precio}")
+                        Spacer(Modifier.height(6.dp))
+                        Text("$${producto.precio}")
+                        Spacer(Modifier.height(6.dp))
                         Text(producto.descripcion, style = MaterialTheme.typography.bodySmall)
+                        Spacer(Modifier.height(6.dp))
 
                         Button(onClick = {}){
-                            Text("Agregar Carrito")
+                            Text("Agregar al carrito")
                         }
                     }
                 }
