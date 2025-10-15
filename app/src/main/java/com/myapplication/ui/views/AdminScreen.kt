@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -16,37 +18,33 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.myapplication.R
 import com.myapplication.data.AppState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, appState: AppState) {
+fun AdminScreen(navController: NavController, appState: AppState) {
     val usuario = appState.usuarioActual
 
     Scaffold(
         topBar = {
             TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primaryContainer,
                     titleContentColor = MaterialTheme.colorScheme.primary,
                 ),
                 title = {
-                    Text("Inicio")
+                    Text("Admin")
                 },
                 actions = {
-                    TextButton(onClick = {
-                        appState.logout()
-                        navController.navigate("login") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }) {
-                        Text(
-                            "Salir",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
+                    IconButton(onClick = { navController.navigate("login") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.logout),
+                            contentDescription = "Logout"
                         )
                     }
                 }
@@ -81,8 +79,8 @@ fun HomeScreen(navController: NavController, appState: AppState) {
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Button(onClick = {navController.navigate("productos") }) {
-                Text("Ver catálogo de productos")
+            Button(onClick = {navController.navigate("productosAdmin") }) {
+                Text("Administrar productos")
             }
         }
     }

@@ -18,33 +18,29 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.form.viewmodel.ResultadoLogin
+import com.example.form.viewmodel.UsuarioViewModel
 import com.myapplication.data.AppState
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController, appState: AppState){
-
-    var usuario by remember { mutableStateOf("") }
-    var password by remember {  mutableStateOf("") }
-    var error by remember {  mutableStateOf("") }
+fun LoginScreen(
+    navController: NavController,
+    viewModel: UsuarioViewModel,
+    appState: AppState
+) {
+    val estado by viewModel.estado.collectAsState()
+    var mensajeError by remember { mutableStateOf<String?>(null) }
 
     Scaffold(
-        //topBar = { TopAppBar(title = { Text("Login") }) }
         topBar = {
-            TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = {
-                    Text("Login")
-                }
+            TopAppBar(title = { Text("Iniciar Sesión") }
             )
         }
-    )
-    { padding ->
+    ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -53,42 +49,73 @@ fun LoginScreen(navController: NavController, appState: AppState){
             verticalArrangement = Arrangement.Center
         ) {
             OutlinedTextField(
-                value = usuario,
-                onValueChange = { usuario = it },
-                label = { Text("Usuario")},
+                value = estado.correo,
+                onValueChange = viewModel::onCorreoChange,
+                label = { Text("Correo") },
+                isError = estado.errores.correo != null,
+                supportingText = {
+                    estado.errores.correo?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(8.dp))
+
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
+                value = estado.clave,
+                onValueChange = viewModel::onClaveChange,
                 label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                isError = estado.errores.clave != null,
+                supportingText = {
+                    estado.errores.clave?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(16.dp))
-            if (error.isNotEmpty()){
-                Text(error, color= MaterialTheme.colorScheme.error)
-                Spacer(Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(16.dp))
+
+            mensajeError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
             }
             Button(
                 onClick = {
-                    if (usuario.isBlank() || password.isBlank()){
-                        error = "Debe ingresar usuario y contraseña"
-                    }else if (appState.login(usuario, password)){
-                        error = ""
-                        //Navego hacia la views 'NotasScreen'
-                        navController.navigate("home")
-                    }else{
-                        error = "Usuario y/o contraseña incorrectos"
+                    val resultado = viewModel.validarLogin(appState)
+
+                    when (resultado) {
+                        is ResultadoLogin.ExitoAdmin -> {
+                            navController.navigate("admin") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        }
+                        is ResultadoLogin.ExitoUsuario -> {
+                            navController.navigate("home") {
+                                popUpTo("login") { inclusive = true }
+                            }
+                        }
+                        is ResultadoLogin.Error -> {
+                            mensajeError = resultado.mensaje
+                        }
                     }
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text("Inicio de sesión")
+                Text("Iniciar Sesión")
             }
-            TextButton(onClick = { navController.navigate("registro")}) {
-                Text("¿No tienes cuenta? Regístrate aquí")
+
+
+            TextButton(
+                onClick = { navController.navigate("registro") },
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text("¿No tienes cuenta? Regístrate")
             }
         }
     }
 }
+

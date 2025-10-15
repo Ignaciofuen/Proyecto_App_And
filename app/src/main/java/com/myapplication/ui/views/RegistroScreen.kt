@@ -1,13 +1,16 @@
-package com.myapplication.ui.views
+package com.example.form.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -15,78 +18,104 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
-import androidx.compose.runtime.*
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.form.viewmodel.UsuarioViewModel
 import com.myapplication.data.AppState
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RegistroScreen(navController: NavController, appState: AppState){
-
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var error by remember { mutableStateOf("") }
+fun RegistroScreen(
+    navController: NavController,
+    viewModel: UsuarioViewModel,
+    appState: AppState
+) {
+    val estado by viewModel.estado.collectAsState()
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text("Registro de usuario") }) }
+        topBar = {
+            TopAppBar(
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primaryContainer,
+                    titleContentColor = MaterialTheme.colorScheme.primary,
+                ),
+                title = { Text("Registro") }
+            )
+        }
     ) { padding ->
-        Column (
-            modifier = Modifier
+        Column(
+            Modifier
                 .fillMaxSize()
-                .padding(padding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
+            // CORREO
             OutlinedTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = { Text("Email")},
+                value = estado.correo,
+                onValueChange = viewModel::onCorreoChange,
+                label = { Text("Correo") },
+                isError = estado.errores.correo != null,
+                supportingText = {
+                    estado.errores.correo?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(8.dp))
 
+            // CONTRASEÑA
             OutlinedTextField(
-                value = password,
-                onValueChange = { password = it },
-                label = { Text("Contraseña")},
+                value = estado.clave,
+                onValueChange = viewModel::onClaveChange,
+                label = { Text("Contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                isError = estado.errores.clave != null,
+                supportingText = {
+                    estado.errores.clave?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                },
                 modifier = Modifier.fillMaxWidth()
             )
-            Spacer(Modifier.height(8.dp))
-            OutlinedTextField(
-                value = confirmPassword,
-                onValueChange = { confirmPassword = it },
-                label = { Text("Confirmar Contraseña") },
-                modifier = Modifier.fillMaxWidth()
-            )
-            Spacer(Modifier.height(16.dp))
 
-            //Muestro los errores si es que error NO está vacío
-            if (error.isNotEmpty()) {
-                Text(error, color = MaterialTheme.colorScheme.error)
-                Spacer(Modifier.height(8.dp))
-            }
+            // REPETIR CONTRASEÑA ✅ NUEVO
+            OutlinedTextField(
+                value = estado.repetirClave,
+                onValueChange = viewModel::onRepetirClaveChange,
+                label = { Text("Repetir contraseña") },
+                visualTransformation = PasswordVisualTransformation(),
+                isError = estado.errores.repetirClave != null,
+                supportingText = {
+                    estado.errores.repetirClave?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error)
+                    }
+                },
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
 
             Button(
                 onClick = {
-                    when {
-                        email.isBlank() || password.isBlank() || confirmPassword.isBlank() ->
-                            error = "Todos los campos son obligatorios"
-                        !email.contains("@") ->
-                            error = "Email no válido"
-                        password.length < 4 ->
-                            error = "La contraseña debe tener al menos 4 caracteres"
-                        password != confirmPassword ->
-                            error = "Las contraseñas no coinciden"
-                        //Con los datos validados llamo al registrarUsuario()
-                        //si el usuario es nuevo lo graba y retorna true
-                        !appState.registrarUsuario(email, password) ->
-                            error = "El email ya se encuentra registrado"
-                        else -> {
-                            error = ""
-                            navController.navigate("login")
+                    if (viewModel.validarRegistro()) {
+                        val exito = appState.registrarUsuario(
+                            email = estado.correo.trim().lowercase(),
+                            password = estado.clave
+                        )
+                        if (exito) {
+                            navController.navigate("login") {
+                                popUpTo("registro") { inclusive = true }
+                            }
+                        } else {
+                            println("El usuario ya existe")
                         }
                     }
                 },
@@ -94,9 +123,11 @@ fun RegistroScreen(navController: NavController, appState: AppState){
             ) {
                 Text("Registrarse")
             }
-            TextButton(onClick = { navController.navigate("login")}) {
+
+            TextButton(onClick = { navController.navigate("login") }) {
                 Text("¿Ya tienes una cuenta creada? Inicia sesión")
             }
         }
     }
 }
+
