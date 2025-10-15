@@ -20,7 +20,6 @@ import com.myapplication.data.DataStoreManager
 import com.myapplication.navigation.AppNavigation
 import com.myapplication.ui.theme.MyAppNavegaValidaTheme
 import com.myapplication.ui.views.LoginScreen
-import com.myapplication.ui.views.RegistroScreen
 import com.myapplication.ui.views.HomeScreen
 
 class MainActivity : ComponentActivity() {
