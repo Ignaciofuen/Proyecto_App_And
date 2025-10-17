@@ -31,7 +31,10 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-            MyApp(appState)
+            MyAppNavegaValidaTheme{
+                MyApp(appState)
+            }
+
         }
     }
 }
@@ -39,9 +42,8 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(appState: AppState) {
     val navController = rememberNavController()
-    MaterialTheme{
         AppNavigation(navController, appState)
-    }
+
 
     /*NavHost(navController= navController, startDestination = "login"){
         composable("login") { LoginScreen(navController) }

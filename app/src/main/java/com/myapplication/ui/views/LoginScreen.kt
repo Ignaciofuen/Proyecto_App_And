@@ -37,7 +37,12 @@ fun LoginScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Iniciar Sesión") }
+            TopAppBar(title = { Text("Iniciar Sesión") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary
+                )
+
             )
         }
     ) { padding ->
