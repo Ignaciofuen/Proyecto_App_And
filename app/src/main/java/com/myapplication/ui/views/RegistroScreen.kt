@@ -42,14 +42,15 @@ fun RegistroScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            TopAppBar(title = { Text("Registro") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.primary,
-                ),
-                title = { Text("Registro") }
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary
+                )
+
             )
         }
+
     ) { padding ->
         Column(
             Modifier
