@@ -21,6 +21,7 @@ import com.myapplication.navigation.AppNavigation
 import com.myapplication.ui.theme.MyAppNavegaValidaTheme
 import com.myapplication.ui.views.LoginScreen
 import com.myapplication.ui.views.HomeScreen
+import androidx.navigation.compose.rememberNavController
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,6 +29,7 @@ class MainActivity : ComponentActivity() {
 
         val dataStore = DataStoreManager(applicationContext)
         val appState = AppState(dataStore)
+        appState.cargarDatos()
 
         enableEdgeToEdge()
         setContent {
@@ -42,7 +44,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun MyApp(appState: AppState) {
     val navController = rememberNavController()
-        AppNavigation(navController, appState)
+    AppNavigation(navController, appState)
 
 
     /*NavHost(navController= navController, startDestination = "login"){

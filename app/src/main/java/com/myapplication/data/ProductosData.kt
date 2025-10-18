@@ -1,5 +1,5 @@
 package com.myapplication.data
- import com.myapplication.R
+import com.myapplication.R
 
 data class Producto(
     val id: Int,
@@ -77,5 +77,3 @@ val Productos = listOf(
     )
 
 )
-
-
