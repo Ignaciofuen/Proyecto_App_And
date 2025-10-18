@@ -8,24 +8,26 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.myapplication.data.AppState
-import com.myapplication.data.Productos
+
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.ui.text.font.FontWeight
 import com.myapplication.R
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductosScreen(navController: NavController, appState: AppState) {
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -47,10 +49,7 @@ fun ProductosScreen(navController: NavController, appState: AppState) {
                     }
                 }
             )
-
-
         }
-
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -59,8 +58,8 @@ fun ProductosScreen(navController: NavController, appState: AppState) {
                 .padding(18.dp)
         ) {
 
-
-            items(Productos) { producto ->
+            // Usamos appState.productos
+            items(appState.productos) { producto ->
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -80,12 +79,25 @@ fun ProductosScreen(navController: NavController, appState: AppState) {
                         Spacer(Modifier.height(6.dp))
                         Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
                         Spacer(Modifier.height(6.dp))
-                        Text("$${producto.precio}")
+
+                        Text(
+                            "$${producto.precio}",
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.SemiBold
+                        )
+
+
                         Spacer(Modifier.height(6.dp))
                         Text(producto.descripcion, style = MaterialTheme.typography.bodySmall)
                         Spacer(Modifier.height(6.dp))
 
-                        Button(onClick = {}){
+                        // Botón para agregar al carrito
+                        Button(
+                            onClick = {
+                                appState.agregarAlCarrito(producto)
+                            },
+                            modifier = Modifier.fillMaxWidth()
+                        ){
                             Text("Agregar al carrito")
                         }
                     }

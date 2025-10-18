@@ -9,8 +9,10 @@ import com.example.form.view.RegistroScreen
 import com.example.form.viewmodel.UsuarioViewModel
 import com.myapplication.data.AppState
 import com.myapplication.ui.views.AdminScreen
+import com.myapplication.ui.views.CarritoScreen
 import com.myapplication.ui.views.HomeScreen
 import com.myapplication.ui.views.LoginScreen
+import com.myapplication.ui.views.ProductosAdminScreen
 import com.myapplication.ui.views.ProductosScreen
 
 @Composable
@@ -27,7 +29,8 @@ fun AppNavigation(navController: NavHostController, appState: AppState){
         composable ("home"){ HomeScreen(navController,appState) }
         composable ("productos"){ ProductosScreen(navController,appState) }
         composable ("admin"){ AdminScreen(navController,appState) }
-        //composable ("productosAdmin"){ ProductosAdminScreen(navController,appState) }
+        composable ("carrito"){ CarritoScreen(navController,appState) }
+        composable ("productosAdmin"){ ProductosAdminScreen(navController,appState) }
+
     }
 }
-
