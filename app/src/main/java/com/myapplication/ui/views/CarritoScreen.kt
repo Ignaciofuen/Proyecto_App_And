@@ -2,6 +2,7 @@ package com.myapplication.ui.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
@@ -22,13 +23,12 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CarritoScreen(navController: NavController, appState: AppState) {
-    // Carrito activo del AppState
+
     val carrito = appState.carrito
 
-    // Formateador de moneda (para CLP)
     val formatter = remember {
         NumberFormat.getCurrencyInstance(Locale("es", "CL")).apply {
-            maximumFractionDigits = 0 // No queremos decimales
+            maximumFractionDigits = 0
         }
     }
 
@@ -39,7 +39,7 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.volver), // Usando tu ícono
+                            painter = painterResource(id = R.drawable.volver),
                             contentDescription = "Volver"
                         )
                     }
@@ -54,7 +54,6 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                 .padding(18.dp)
         ) {
             if (carrito.isEmpty()) {
-                // Mensaje de carrito vacío
                 Box(
                     modifier = Modifier.fillMaxSize(),
                     contentAlignment = Alignment.Center
@@ -65,18 +64,18 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                     )
                 }
             } else {
-                // Lista de productos en el carrito
                 LazyColumn(modifier = Modifier.weight(1.0f)) {
                     items(carrito) { producto ->
                         Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 8.dp),
+                                .padding(vertical = 10.dp),
                             elevation = CardDefaults.cardElevation(4.dp)
                         ) {
                             Row(
-                                modifier = Modifier.padding(12.dp),
-                                verticalAlignment = Alignment.CenterVertically
+                                modifier = Modifier.fillMaxWidth(),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceAround,
                             ) {
                                 Image(
                                     painter = painterResource(producto.imagen),
@@ -93,7 +92,6 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                                         style = MaterialTheme.typography.bodyLarge
                                     )
                                 }
-                                // Botón para eliminar
                                 Button(
                                     onClick = {
                                         appState.eliminarDelCarrito(producto)
@@ -102,17 +100,19 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                                         containerColor = MaterialTheme.colorScheme.error
                                     )
                                 ) {
-                                    Text("Eliminar")
+                                    Icon(
+                                        painter = painterResource(id = R.drawable.borrar),
+                                        contentDescription = "Borrar",
+                                    )
+
                                 }
                             }
                         }
                     }
                 }
 
-                // --- Resumen y Total ---
                 Spacer(Modifier.height(16.dp))
 
-                // Calcular total
                 val total = carrito.sumOf { it.precio }
 
                 Text(
@@ -127,7 +127,7 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                 Button(
                     onClick = {
                         appState.vaciarCarrito()
-                        navController.popBackStack() // Volver
+                        navController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp)
                 ) {
