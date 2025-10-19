@@ -12,6 +12,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -35,22 +37,19 @@ fun HomeScreen(navController: NavController, appState: AppState) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Iniciar Sesión") },
-                colors = TopAppBarDefaults.topAppBarColors(
+            TopAppBar(
+                    colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    titleContentColor = MaterialTheme.colorScheme.onSecondary
+                    titleContentColor = MaterialTheme.colorScheme.secondary,
                 ),
+                title = {
+                    Text("Home")
+                },
                 actions = {
-                    TextButton(onClick = {
-                        appState.logout()
-                        navController.navigate("login") {
-                            popUpTo("login") { inclusive = true }
-                        }
-                    }) {
-                        Text(
-                            "Salir",
-                            color = MaterialTheme.colorScheme.primary,
-                            fontWeight = FontWeight.Bold
+                    IconButton(onClick = { navController.navigate("login") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.logout),
+                            contentDescription = "Logout"
                         )
                     }
                 }
@@ -62,10 +61,10 @@ fun HomeScreen(navController: NavController, appState: AppState) {
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "¡Bienvenido a la app!",
+                text = "¡Bienvenido a Level-Up!",
                 style = MaterialTheme.typography.headlineMedium
             )
 

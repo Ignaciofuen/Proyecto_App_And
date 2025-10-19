@@ -33,12 +33,12 @@ fun AdminScreen(navController: NavController, appState: AppState) {
     Scaffold(
         topBar = {
             TopAppBar(
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    titleContentColor = MaterialTheme.colorScheme.secondary,
+                    colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.onBackground,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
                 ),
                 title = {
-                    Text("Admin")
+                    Text("ADMINISTRADOR")
                 },
                 actions = {
                     IconButton(onClick = { navController.navigate("login") }) {
@@ -59,7 +59,7 @@ fun AdminScreen(navController: NavController, appState: AppState) {
             verticalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "¡Bienvenido a la app!",
+                text = "¡Bienvenido al panel de administrador!",
                 style = MaterialTheme.typography.headlineMedium
             )
 

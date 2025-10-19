@@ -26,15 +26,12 @@ import java.util.Locale
 @Composable
 fun ProductosAdminScreen(navController: NavController, appState: AppState) {
 
-    // Estados para controlar los dialogs
     var mostrarDialogoAgregar by remember { mutableStateOf(false) }
     var mostrarDialogoEditar by remember { mutableStateOf(false) }
     var mostrarDialogoEliminar by remember { mutableStateOf(false) }
 
-    // Estado para el producto seleccionado (para editar/eliminar)
     var productoSeleccionado by remember { mutableStateOf<Producto?>(null) }
 
-    // Formateador de moneda
     val formatter = remember {
         NumberFormat.getCurrencyInstance(Locale("es", "CL")).apply {
             maximumFractionDigits = 0
@@ -44,7 +41,11 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Administrar Productos") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                containerColor = MaterialTheme.colorScheme.onBackground,
+                titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            ),
+                title = { Text("Gestión de productos") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
@@ -55,18 +56,17 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                 }
             )
         },
-        // --- INICIO DE LA MODIFICACIÓN FINAL ---
         floatingActionButton = {
-            // Botón para AGREGAR (ahora con texto)
             FloatingActionButton(onClick = {
-                productoSeleccionado = null // Limpiar selección
+                productoSeleccionado = null
                 mostrarDialogoAgregar = true
             }) {
-                // Se usa Text en lugar de Icon
-                Text("Agregar", modifier = Modifier.padding(horizontal = 16.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.addproducto),
+                    contentDescription = "Agregar producto"
+                )
             }
         }
-        // --- FIN DE LA MODIFICACIÓN FINAL ---
     ) { padding ->
         LazyColumn(
             modifier = Modifier
@@ -79,7 +79,7 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                    elevation = CardDefaults.cardElevation(4.dp)
+                        elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Row(
                         modifier = Modifier.padding(12.dp),
@@ -108,7 +108,10 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                             productoSeleccionado = producto
                             mostrarDialogoEditar = true
                         }) {
-                            Text("Editar")
+                            Icon(
+                                painter = painterResource(id = R.drawable.editar),
+                                contentDescription = "Editar producto"
+                            )
                         }
 
                         // Botón ELIMINAR (con texto y color)
@@ -116,9 +119,9 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                             productoSeleccionado = producto
                             mostrarDialogoEliminar = true
                         }) {
-                            Text(
-                                "Eliminar",
-                                color = MaterialTheme.colorScheme.error // Color rojo
+                            Icon(
+                                painter = painterResource(id = R.drawable.borrar),
+                                contentDescription = "Borrar producto"
                             )
                         }
                     }
@@ -127,9 +130,7 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
         }
     }
 
-    // --- DIALOGS (Sin cambios) ---
 
-    // 1. Dialogo para AGREGAR producto
     if (mostrarDialogoAgregar) {
         FormularioProductoDialog(
             onDismiss = { mostrarDialogoAgregar = false },
@@ -141,7 +142,6 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
         )
     }
 
-    // 2. Dialogo para EDITAR producto
     if (mostrarDialogoEditar && productoSeleccionado != null) {
         FormularioProductoDialog(
             producto = productoSeleccionado,
@@ -154,7 +154,6 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
         )
     }
 
-    // 3. Dialogo para CONFIRMAR ELIMINACIÓN
     if (mostrarDialogoEliminar && productoSeleccionado != null) {
         AlertDialog(
             onDismissRequest = { mostrarDialogoEliminar = false },
@@ -168,7 +167,10 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Text("Eliminar")
+                    Icon(
+                        painter = painterResource(id = R.drawable.addproducto),
+                        contentDescription = "Agregar producto"
+                    )
                 }
             },
             dismissButton = {
@@ -180,18 +182,12 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
     }
 }
 
-
-/**
- * Dialogo reutilizable para Agregar y Editar productos.
- * (Este Composable no tuvo cambios)
- */
 @Composable
 fun FormularioProductoDialog(
     producto: Producto? = null,
     onDismiss: () -> Unit,
     onSave: (nombre: String, descripcion: String, precio: Int, imagenResId: Int, categoria: String) -> Unit
 ) {
-    // Estados para los campos del formulario
     var nombre by remember { mutableStateOf(producto?.nombre ?: "") }
     var descripcion by remember { mutableStateOf(producto?.descripcion ?: "") }
     var categoria by remember { mutableStateOf(producto?.categoria ?: "") }

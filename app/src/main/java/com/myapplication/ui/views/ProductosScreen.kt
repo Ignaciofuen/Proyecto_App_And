@@ -43,7 +43,13 @@ fun ProductosScreen(navController: NavController, appState: AppState) {
                 actions = {
                     IconButton(onClick = { navController.navigate("carrito") }) {
                         Icon(
-                            painter = painterResource(id = R.drawable.carrito),
+                            painter = painterResource(id = R.drawable.carrito,),
+                            contentDescription = "Carrito"
+                        )
+                    }
+                    IconButton(onClick = { navController.navigate("login") }) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.logout,),
                             contentDescription = "Carrito"
                         )
                     }

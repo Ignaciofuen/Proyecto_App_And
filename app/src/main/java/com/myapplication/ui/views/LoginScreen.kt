@@ -42,7 +42,6 @@ fun LoginScreen(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
                 )
-
             )
         }
     ) { padding ->
