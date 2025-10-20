@@ -10,6 +10,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -40,17 +41,17 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
+            TopAppBar(title = { Text("Gestión de productos") },
                 colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = MaterialTheme.colorScheme.onBackground,
-                titleContentColor = MaterialTheme.colorScheme.onPrimary,
-            ),
-                title = { Text("Gestión de productos") },
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.volver),
-                            contentDescription = "Volver"
+                            contentDescription = "Volver",
+                            tint = Color(0xFFFFFFFF)
                         )
                     }
                 }
