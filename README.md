@@ -10,17 +10,17 @@ Login: Autenticación de usuarios a través de un formulario con correo y contra
 
 Registro: Permite a los nuevos usuarios crear una cuenta en la tienda.
 
-Home: Pantalla inicial donde los usuarios pueden ver las categorías y explorar el catálogo de productos.
+Home: Pantalla inicial donde los usuarios pueden explorar el catálogo de productos.
 
-Catálogo de Productos: Los usuarios pueden navegar por los productos disponibles, ver sus detalles y agregarlos al carrito de compras.
+Catálogo de Productos: Los usuarios pueden navegar por los productos disponibles y agregarlos al carrito de compras.
 
-Carrito de Compras: Los usuarios pueden gestionar los productos en su carrito antes de realizar la compra.
+Carrito de Compras: Los usuarios pueden gestionar los productos en su carrito (eliminarlos desde ahí) antes de realizar la compra.
 
-Para el Administrador:
+Panel de Administrador:
 
-Login: Acceso separado para administradores, similar al proceso de autenticación de usuarios.
+Login: Mismo login que para usuario, simplemente se valida el dominio del correo que al ser '@admin.cl' reedirige al home de Administrador.
 
-Home del Admin: Pantalla donde el administrador puede gestionar los productos del catálogo.
+Home del Admin: Pantalla donde el administrador dirigirse a la pantalla de gestión de productos.
 
 Gestión de Productos: El administrador puede realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre los productos de la tienda, como agregar nuevos productos o editar los existentes.
 
@@ -30,12 +30,6 @@ Android Studio: Entorno de desarrollo integrado (IDE) utilizado para crear la ap
 
 Kotlin: Lenguaje de programación principal utilizado en el proyecto para desarrollar la lógica de la aplicación.
 
-Firebase:
-
-Firebase Authentication: Para la autenticación de usuarios (login y registro).
-
-Firebase Realtime Database / Firestore: Para la gestión de datos de productos y usuarios.
-
 MVVM (Model-View-ViewModel): El proyecto sigue el patrón de arquitectura MVVM para separar la lógica de la vista, lo que facilita la escalabilidad y el mantenimiento de la aplicación.
 
 Model: Clases que representan los datos y la lógica de negocio (por ejemplo, productos, usuarios).
@@ -44,4 +38,4 @@ View: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar 
 
 ViewModel: Gestiona los datos y la lógica de presentación, sirviendo de intermediario entre el modelo y la vista.
 
-SQLite / Room Database: Dependiendo de la implementación, se utiliza SQLite o Room para el almacenamiento local de productos y datos del carrito de compras.
+Room Database: Para el almacenamiento local de productos y datos del carrito de compras.
