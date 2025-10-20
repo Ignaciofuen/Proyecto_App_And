@@ -18,6 +18,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -32,19 +33,17 @@ fun AdminScreen(navController: NavController, appState: AppState) {
 
     Scaffold(
         topBar = {
-            TopAppBar(
-                    colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.onBackground,
-                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            TopAppBar(title = { Text("ADMINISTRADOR") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary
                 ),
-                title = {
-                    Text("ADMINISTRADOR")
-                },
                 actions = {
                     IconButton(onClick = { navController.navigate("login") }) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout),
-                            contentDescription = "Logout"
+                            contentDescription = "Logout",
+                            tint = Color(0xFFFFFFFF)
                         )
                     }
                 }
