@@ -1,6 +1,5 @@
-#Level-Up Gaming
 <img width="366" height="366" alt="levelupgamerimg" src="https://github.com/user-attachments/assets/52e1dc30-06e6-477c-93dc-f886625e6297" />
-Proyecto de Tienda de Periféricos Gamer
+Level-Up Gaming
 
 Este proyecto es una aplicación móvil desarrollada en Android Studio utilizando Kotlin, diseñada para simular una tienda en línea especializada en la venta de periféricos para gamers. Los usuarios pueden registrarse, iniciar sesión, explorar productos y agregarlos a su carrito. Además, incluye una interfaz de administración para la gestión del catálogo de productos.
 
