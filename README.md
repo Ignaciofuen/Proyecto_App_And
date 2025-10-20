@@ -3,44 +3,26 @@
 
 Este proyecto es una aplicación móvil desarrollada en Android Studio utilizando Kotlin, diseñada para simular una tienda en línea especializada en la venta de periféricos para gamers. Los usuarios pueden registrarse, iniciar sesión, explorar productos y agregarlos a su carrito. Además, incluye una interfaz de administración para la gestión del catálogo de productos.
 
-## :hammer:Funcionalidades del proyecto
-- `Funcionalidad 1`: descripción de la funcionalidad 1-
--  `Funcionalidad 2`: descripción de la funcionalidad 2-
--   `Funcionalidad 2a`: descripción de la funcionalidad
+## :hammer:Características
+Para el usuario final 👤:
+- `Login`:  Autenticación de usuarios a través de un formulario con correo y contraseña.
+- `Registro`: Permite a los nuevos usuarios crear una cuenta en la tienda.
+- `Home`: Pantalla inicial donde los usuarios pueden explorar el catálogo de productos.
+- `Catálogo de Productos`: Los usuarios pueden navegar por los productos disponibles y agregarlos al carrito de compras.
+- `Carrito de Compras`:  Los usuarios pueden gestionar los productos en su carrito (eliminarlos desde ahí) antes de realizar la compra.
 
-Características
-Para el Usuario Final:
+Para el usuario administrador 👑:
+- `Register y Login`: Idéntico que para usuario, simplemente se valida al momento del Login el dominio del correo que al ser '@admin.cl' reedirige al home de Administrador.
+- `Home`: Pantalla donde el administrador dirigirse a la pantalla de gestión de productos.
+- `Gestión de Productos`: El administrador puede realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre los productos de la tienda, como agregar nuevos productos o editar los existentes.
 
-Login: Autenticación de usuarios a través de un formulario con correo y contraseña.
+## Tecnologías Usadas 💻🛠️⚙️
 
-Registro: Permite a los nuevos usuarios crear una cuenta en la tienda.
-
-Home: Pantalla inicial donde los usuarios pueden explorar el catálogo de productos.
-
-Catálogo de Productos: Los usuarios pueden navegar por los productos disponibles y agregarlos al carrito de compras.
-
-Carrito de Compras: Los usuarios pueden gestionar los productos en su carrito (eliminarlos desde ahí) antes de realizar la compra.
-
-Panel de Administrador:
-
-Login: Mismo login que para usuario, simplemente se valida el dominio del correo que al ser '@admin.cl' reedirige al home de Administrador.
-
-Home del Admin: Pantalla donde el administrador dirigirse a la pantalla de gestión de productos.
-
-Gestión de Productos: El administrador puede realizar operaciones CRUD (Crear, Leer, Actualizar, Eliminar) sobre los productos de la tienda, como agregar nuevos productos o editar los existentes.
-
-Tecnologías Usadas
-
-Android Studio: Entorno de desarrollo integrado (IDE) utilizado para crear la aplicación Android.
-
-Kotlin: Lenguaje de programación principal utilizado en el proyecto para desarrollar la lógica de la aplicación.
-
-MVVM (Model-View-ViewModel): El proyecto sigue el patrón de arquitectura MVVM para separar la lógica de la vista, lo que facilita la escalabilidad y el mantenimiento de la aplicación.
-
-Model: Clases que representan los datos y la lógica de negocio (por ejemplo, productos, usuarios).
-
-View: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar los datos al usuario.
-
-ViewModel: Gestiona los datos y la lógica de presentación, sirviendo de intermediario entre el modelo y la vista.
-
-Room Database: Para el almacenamiento local de productos y datos del carrito de compras.
+- `Android Studio`: Entorno de desarrollo integrado (IDE) utilizado para crear la aplicación Android.
+- `Kotlin`: Lenguaje de programación principal utilizado en el proyecto para desarrollar la lógica de la aplicación.
+- `MVVM (Model-View-ViewModel):`:  El proyecto sigue el patrón de arquitectura MVVM para separar la lógica de la vista, lo que facilita la escalabilidad y el mantenimiento de la aplicación.
+- `Model`: Clases que representan los datos y la lógica de negocio (por ejemplo, productos, usuarios).
+- `View`: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar los datos al usuario.
+- `View`: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar los datos al usuario.
+- `ViewModel`: Gestiona los datos y la lógica de presentación, sirviendo de intermediario entre el modelo y la vista.
+- `Room Database`: Para el almacenamiento local de productos y datos del carrito de compras.
