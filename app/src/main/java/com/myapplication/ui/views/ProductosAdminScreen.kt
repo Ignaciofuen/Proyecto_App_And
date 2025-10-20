@@ -114,7 +114,7 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                             )
                         }
 
-                        // Botón ELIMINAR (con texto y color)
+
                         TextButton(onClick = {
                             productoSeleccionado = producto
                             mostrarDialogoEliminar = true

@@ -25,7 +25,7 @@ class AppState(private val dataStore: DataStoreManager) {
 
     private val scope = CoroutineScope(Dispatchers.IO)
 
-    // Carga de usuarios desde DataStore
+
     fun cargarDatos() {
         scope.launch {
             val users = dataStore.getUsers().first()
@@ -35,7 +35,7 @@ class AppState(private val dataStore: DataStoreManager) {
             val prods = dataStore.getProducts().first()
             _productos.clear()
             if (prods == null) {
-                // Si es la primera vez, carga la lista estática (de Producto.kt)
+
                 _productos.addAll(Productos)
                 guardarProductos()
             } else {
@@ -44,7 +44,7 @@ class AppState(private val dataStore: DataStoreManager) {
 
 
 
-            // 3. Cargar Carritos
+
             val carts = dataStore.getCarts().first()
             _carritos.clear()
             _carritos.putAll(carts)
@@ -76,21 +76,21 @@ class AppState(private val dataStore: DataStoreManager) {
         val nuevoId = (_productos.maxOfOrNull { it.id } ?: 0) + 1
         val nuevoProducto = Producto(nuevoId, nombre, precio, imagen, descripcion, categoria)
         _productos.add(nuevoProducto)
-        guardarProductos() // Guardar lista de productos
+        guardarProductos()
     }
 
     fun eliminarProducto(producto: Producto) {
         _productos.remove(producto)
 
-        // ¡IMPORTANTE! Quitar de todos los carritos guardados
+
         _carritos.forEach { (email, cart) ->
             _carritos[email] = cart.filter { it.id != producto.id }
         }
-        // Quitar del carrito activo actual
+
         _carrito.removeAll { it.id == producto.id }
 
         guardarProductos()
-        guardarCarritos() // Guardar los carritos actualizados
+        guardarCarritos()
     }
 
     fun editarProducto(idProducto: Int, nombre: String, descripcion: String, precio: Int, @DrawableRes imagen: Int, categoria: String) {
@@ -99,11 +99,11 @@ class AppState(private val dataStore: DataStoreManager) {
             val actualizado = Producto(idProducto, nombre, precio, imagen, descripcion, categoria)
             _productos[indice] = actualizado
 
-            // ¡IMPORTANTE! Actualizar en todos los carritos guardados
+
             _carritos.forEach { (email, cart) ->
                 _carritos[email] = cart.map { if (it.id == idProducto) actualizado else it }
             }
-            // Actualizar en el carrito activo actual
+
             _carrito.replaceAll { if (it.id == idProducto) actualizado else it }
 
             guardarProductos()
@@ -121,12 +121,12 @@ class AppState(private val dataStore: DataStoreManager) {
 
     fun agregarAlCarrito(producto: Producto) {
         _carrito.add(producto)
-        guardarCarritoActual() // Guardar en cada cambio
+        guardarCarritoActual()
     }
 
     fun eliminarDelCarrito(producto: Producto) {
         _carrito.remove(producto)
-        guardarCarritoActual() // Guardar en cada cambio
+        guardarCarritoActual()
     }
 
     fun vaciarCarrito() {
@@ -143,8 +143,8 @@ class AppState(private val dataStore: DataStoreManager) {
 
     private fun guardarCarritoActual() {
         usuarioActual?.let { user ->
-            _carritos[user.email] = _carrito.toList() // Guardar una copia
-            guardarCarritos() // Persistir el mapa entero
+            _carritos[user.email] = _carrito.toList()
+            guardarCarritos()
         }
     }
 

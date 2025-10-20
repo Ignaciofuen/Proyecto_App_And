@@ -47,7 +47,7 @@ class DataStoreManager(private val context: Context){
         return context.dataStore.data.map { prefs ->
             val json = prefs[PRODUCTS_KEY]
             if (json == null) {
-                null // AppState se encargará de poner la lista default
+                null
             } else {
                 val type = object : TypeToken<List<Producto>>() {}.type
                 gson.fromJson(json, type)
