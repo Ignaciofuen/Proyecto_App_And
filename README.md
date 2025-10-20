@@ -3,6 +3,11 @@
 
 Este proyecto es una aplicación móvil desarrollada en Android Studio utilizando Kotlin, diseñada para simular una tienda en línea especializada en la venta de periféricos para gamers. Los usuarios pueden registrarse, iniciar sesión, explorar productos y agregarlos a su carrito. Además, incluye una interfaz de administración para la gestión del catálogo de productos.
 
+## :hammer:Funcionalidades del proyecto
+- `Funcionalidad 1`: descripción de la funcionalidad 1-
+-  `Funcionalidad 2`: descripción de la funcionalidad 2-
+-   `Funcionalidad 2a`: descripción de la funcionalidad
+
 Características
 Para el Usuario Final:
 
