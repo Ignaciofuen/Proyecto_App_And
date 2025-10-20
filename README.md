@@ -23,6 +23,5 @@ Para el usuario administrador 👑:
 - `MVVM (Model-View-ViewModel):`:  El proyecto sigue el patrón de arquitectura MVVM para separar la lógica de la vista, lo que facilita la escalabilidad y el mantenimiento de la aplicación.
 - `Model`: Clases que representan los datos y la lógica de negocio (por ejemplo, productos, usuarios).
 - `View`: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar los datos al usuario.
-- `View`: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar los datos al usuario.
 - `ViewModel`: Gestiona los datos y la lógica de presentación, sirviendo de intermediario entre el modelo y la vista.
 - `Room Database`: Para el almacenamiento local de productos y datos del carrito de compras.
