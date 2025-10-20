@@ -52,7 +52,6 @@ class AppState(private val dataStore: DataStoreManager) {
 
     }
 
-    // Registro de usuario
     fun registrarUsuario(email: String, password: String): Boolean {
         if (usuarios.any { it.email == email }) return false
         val nuevo = Usuario(email, password)
@@ -61,7 +60,6 @@ class AppState(private val dataStore: DataStoreManager) {
         return true
     }
 
-    // Login
     fun login(email: String, password: String): Boolean {
         val user = usuarios.find { it.email == email && it.password == password }
         return if (user != null) {
@@ -70,7 +68,6 @@ class AppState(private val dataStore: DataStoreManager) {
         } else false
     }
 
-    // Logout
     fun logout() {
         usuarioActual = null
     }

@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -18,11 +20,14 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.form.viewmodel.ResultadoLogin
 import com.example.form.viewmodel.UsuarioViewModel
+import com.myapplication.R
 import com.myapplication.data.AppState
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,11 +42,19 @@ fun LoginScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Iniciar Sesión") },
-                colors = TopAppBarDefaults.topAppBarColors(
+            TopAppBar(title = { Text("Inicio de Sesión") },
+                    colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
-                )
+                ),
+                actions = {
+                        Icon(
+                            painter = painterResource(id = R.drawable.user),
+                            contentDescription = "User icon",
+                            tint = Color(0xFFFFFFFF),
+                            modifier = Modifier.padding(end = 16.dp)
+                        )
+                }
             )
         }
     ) { padding ->
@@ -52,10 +65,15 @@ fun LoginScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
+            Text(
+                text = "¡Hola! A continuación debes iniciar sesión o registrarte.",
+                style = MaterialTheme.typography.headlineMedium
+            )
+            Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = estado.correo,
                 onValueChange = viewModel::onCorreoChange,
-                label = { Text("Correo") },
+                label = { Text("Ingresa tu e-mail") },
                 isError = estado.errores.correo != null,
                 supportingText = {
                     estado.errores.correo?.let {

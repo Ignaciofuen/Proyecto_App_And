@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -35,12 +36,17 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Mi Carrito") },
+                title = { Text("Carrito de compras") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.volver),
-                            contentDescription = "Volver"
+                            contentDescription = "Volver",
+                            tint = Color(0xFFFFFFFF)
                         )
                     }
                 }
@@ -114,7 +120,12 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                 Spacer(Modifier.height(16.dp))
 
                 val total = carrito.sumOf { it.precio }
-
+                Text(
+                    text = "Items totales: ${carrito.size}",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.align(Alignment.End)
+                )
                 Text(
                     text = "Total: ${formatter.format(total)}",
                     style = MaterialTheme.typography.headlineMedium,
