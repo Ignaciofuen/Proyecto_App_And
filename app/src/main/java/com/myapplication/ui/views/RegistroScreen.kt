@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,10 +25,13 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.example.form.viewmodel.UsuarioViewModel
+import com.myapplication.R
 import com.myapplication.data.AppState
 
 
@@ -42,12 +46,19 @@ fun RegistroScreen(
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Registro") },
+            TopAppBar(title = { Text("Registro de usuario") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
-                )
-
+                ),
+                actions = {
+                    Icon(
+                        painter = painterResource(id = R.drawable.newuser),
+                        contentDescription = "User icon",
+                        tint = Color(0xFFFFFFFF),
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
+                }
             )
         }
 
@@ -57,12 +68,15 @@ fun RegistroScreen(
                 .fillMaxSize()
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
-        ) {
-            // CORREO
+        ) { Text(
+            text = "Ingresa los datos requeridos.",
+            style = MaterialTheme.typography.headlineMedium
+        )
+            Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
                 value = estado.correo,
                 onValueChange = viewModel::onCorreoChange,
-                label = { Text("Correo") },
+                label = { Text("Ingresa tu e-mail") },
                 isError = estado.errores.correo != null,
                 supportingText = {
                     estado.errores.correo?.let {

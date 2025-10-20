@@ -21,6 +21,8 @@ import androidx.compose.material3.IconButton
 
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import com.myapplication.R
 
@@ -32,28 +34,39 @@ fun ProductosScreen(navController: NavController, appState: AppState) {
         topBar = {
             TopAppBar(
                 title = { Text("Catálogo de Productos") },
+                    colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onSecondary
+                ),
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             painter = painterResource(id = R.drawable.volver),
-                            contentDescription = "Volver"
+                            contentDescription = "Volver",
+                            tint = Color(0xFFFFFFFF)
                         )
                     }
                 },
                 actions = {
-                    IconButton(onClick = { navController.navigate("carrito") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.carrito,),
-                            contentDescription = "Carrito"
-                        )
-                    }
-                    IconButton(onClick = { navController.navigate("login") }) {
-                        Icon(
-                            painter = painterResource(id = R.drawable.logout,),
-                            contentDescription = "Carrito"
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = { navController.navigate("carrito") }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.carrito),
+                                contentDescription = "Carrito",
+                                tint = Color(0xFFFFFFFF)
+                            )
+                        }
+                        Text(
+                            text = "(${appState.carrito.size})",
+                            color = Color.White,
+                            style = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier.padding(end = 8.dp) // opcional para separación del borde
                         )
                     }
                 }
+
             )
         }
     ) { padding ->
