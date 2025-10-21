@@ -1,6 +1,7 @@
 package com.myapplication
 
 import android.os.Bundle
+
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -22,21 +23,24 @@ import com.myapplication.ui.theme.MyAppNavegaValidaTheme
 import com.myapplication.ui.views.LoginScreen
 import com.myapplication.ui.views.HomeScreen
 import androidx.navigation.compose.rememberNavController
+import androidx.activity.enableEdgeToEdge
+
+import com.myapplication.data.AppDatabase
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         val dataStore = DataStoreManager(applicationContext)
-        val appState = AppState(dataStore)
+        val db = AppDatabase.getInstance(applicationContext)
+        val appState = AppState(dataStore, db)
         appState.cargarDatos()
-
         enableEdgeToEdge()
         setContent {
             MyAppNavegaValidaTheme{
                 MyApp(appState)
             }
-
         }
     }
 }

@@ -90,7 +90,7 @@ class UsuarioViewModel : ViewModel() {
 
         appState.usuarioActual = usuario
 
-        // Verificar si es admin
+
         return if (usuario.email.endsWith("@admin.cl")) {
             ResultadoLogin.ExitoAdmin
         } else {
