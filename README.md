@@ -28,6 +28,6 @@ Para el usuario administrador 👑:
 
 ## Recursos nativos de Android 🤖 
 - `🔔 Notificaciones`: Se implementó usando FusedLocationProvider de Google Play Services para obtener la ubicación del usuario de manera eficiente. Se utiliza Geocoder para convertir las coordenadas (latitud y longitud) en una ubicación legible (ciudad y país).
-- `📍 Ubicación`: Se creó un canal de notificaciones (NotificationChannel) para manejar notificaciones locales. Se implementó una función global mostrarNotificacion que se llama desde los composables para mostrar alertas al usuario, como “Nuevo catálogo disponible”. Las notificaciones respetan los permisos de Android 13+ (POST_NOTIFICATIONS) y se integran con la UI de manera segura.
+- `📍 Geolocalización`: Se creó un canal de notificaciones (NotificationChannel) para manejar notificaciones locales. Se implementó una función global mostrarNotificacion que se llama desde los composables para mostrar alertas al usuario, como “Nuevo catálogo disponible”. Las notificaciones respetan los permisos de Android 13+ (POST_NOTIFICATIONS) y se integran con la UI de manera segura.
   
 *Los permisos se solicitan dinámicamente según la versión de Android y se muestra la ubicación en la interfaz.
