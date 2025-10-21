@@ -1,4 +1,4 @@
-## Level-Up Gamer 🎧
+## Level-Up Gamer 🎧 Proyecto realizado por Axel Soto y Ignacio Fuenzalida
 <img width="366" height="366" alt="levelupgamerimg" src="https://github.com/user-attachments/assets/52e1dc30-06e6-477c-93dc-f886625e6297" />
 
 Este proyecto es una aplicación móvil desarrollada en Android Studio utilizando Kotlin, diseñada para simular una tienda en línea especializada en la venta de periféricos para gamers. Los usuarios pueden registrarse, iniciar sesión, explorar productos y agregarlos a su carrito. Además, incluye una interfaz de administración para la gestión del catálogo de productos.
@@ -25,3 +25,9 @@ Para el usuario administrador 👑:
 - `View`: La interfaz de usuario (UI) que interactúa con el ViewModel para mostrar los datos al usuario.
 - `ViewModel`: Gestiona los datos y la lógica de presentación, sirviendo de intermediario entre el modelo y la vista.
 - `Room Database`: Para el almacenamiento local de productos y datos del carrito de compras.
+
+## Recursos nativos de Android 🤖 
+- `🔔 Notificaciones`: Se implementó usando FusedLocationProvider de Google Play Services para obtener la ubicación del usuario de manera eficiente. Se utiliza Geocoder para convertir las coordenadas (latitud y longitud) en una ubicación legible (ciudad y país).
+- `📍 Ubicación`: Se creó un canal de notificaciones (NotificationChannel) para manejar notificaciones locales. Se implementó una función global mostrarNotificacion que se llama desde los composables para mostrar alertas al usuario, como “Nuevo catálogo disponible”. Las notificaciones respetan los permisos de Android 13+ (POST_NOTIFICATIONS) y se integran con la UI de manera segura.
+  
+*Los permisos se solicitan dinámicamente según la versión de Android y se muestra la ubicación en la interfaz.
