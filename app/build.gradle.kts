@@ -1,17 +1,17 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.ksp)
 }
 
 android {
     namespace = "com.myapplication"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.myapplication"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -33,20 +33,34 @@ android {
     }
     kotlinOptions {
         jvmTarget = "11"
+
+
+
+
     }
     buildFeatures {
         compose = true
     }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }
+
 }
 
 dependencies {
+    // Dependencias de DataStore y Gson (usando alias)
+    implementation(libs.androidx.datastore.preferences)
+    implementation(libs.gson)
 
-    implementation("androidx.datastore:datastore-preferences:1.1.7")
-    implementation("com.google.code.gson:gson:2.13.2")
+    // Dependencias de Room (usando alias)
+    implementation(libs.androidx.room.runtime)
+    implementation(libs.androidx.room.ktx)
+    ksp(libs.androidx.room.compiler)
 
-    // Dependencia para geolocalización
-    implementation("com.google.android.gms:play-services-location:21.0.1")
+    // Play Services (usando alias)
+    implementation(libs.google.playservices.location)
 
+    // Dependencias estándar (usando alias)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -54,10 +68,11 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-    implementation(libs.androidx.material3)
+    implementation(libs.material3)
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
-    implementation(libs.material3)
+
+    // Dependencias de Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

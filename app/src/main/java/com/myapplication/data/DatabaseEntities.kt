@@ -1,14 +1,31 @@
 package com.myapplication.data
+
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import androidx.annotation.DrawableRes
 import com.myapplication.R
 
+
+@Entity(tableName = "usuarios")
+data class Usuario(
+    @PrimaryKey
+    val email: String,
+    val password: String
+)
+
+@Entity(tableName = "productos")
 data class Producto(
+    @PrimaryKey
     val id: Int,
     val nombre: String,
     val precio: Int,
+    @DrawableRes
     val imagen: Int,
     val descripcion: String,
     val categoria: String
 )
+
 
 val Productos = listOf(
     Producto(
@@ -75,5 +92,4 @@ val Productos = listOf(
         descripcion = "Inalámbrico Sky Cipher",
         categoria = "Control"
     )
-
 )
