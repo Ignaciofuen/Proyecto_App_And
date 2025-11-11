@@ -24,6 +24,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -105,7 +106,8 @@ fun HomeScreen(navController: NavController, appState: AppState) {
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center ,
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text("¡Bienvenido a Level-Up!", style = MaterialTheme.typography.headlineMedium)
 
@@ -116,6 +118,7 @@ fun HomeScreen(navController: NavController, appState: AppState) {
                 contentDescription = "Logo de bienvenida",
                 modifier = Modifier.height(400.dp).fillMaxWidth(0.7f),
                 contentScale = ContentScale.Fit
+
             )
 
             appState.usuarioActual?.let {
