@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -20,7 +19,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -33,22 +31,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.google.android.gms.location.LocationServices
-import com.myapplication.data.AppState
 import com.myapplication.R
 import com.myapplication.utils.mostrarNotificacion
+import com.myapplication.viewmodel.PostUsuarioViewModel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeScreen(navController: NavController, appState: AppState) {
+fun HomeScreen(
+    navController: NavController,
+    viewModel: PostUsuarioViewModel = viewModel()
+) {
     val context = LocalContext.current
     val fusedLocationClient = remember {
         LocationServices.getFusedLocationProviderClient(context)
     }
 
     var ubicacion by remember { mutableStateOf<String?>(null) }
+
+    val usuario by viewModel.usuarioActual.collectAsState()
+
 
     LaunchedEffect(Unit) {
         if (ContextCompat.checkSelfPermission(
@@ -90,7 +95,13 @@ fun HomeScreen(navController: NavController, appState: AppState) {
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 actions = {
-                    IconButton(onClick = { navController.navigate("login") }) {
+                    // 5. BOTÓN DE LOGOUT ACTUALIZADO
+                    IconButton(onClick = {
+                        viewModel.logout() // Llama al ViewModel
+                        navController.navigate("login") { // Navega
+                            popUpTo("home") { inclusive = true }
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
@@ -118,10 +129,10 @@ fun HomeScreen(navController: NavController, appState: AppState) {
                 contentDescription = "Logo de bienvenida",
                 modifier = Modifier.height(400.dp).fillMaxWidth(0.7f),
                 contentScale = ContentScale.Fit
-
             )
 
-            appState.usuarioActual?.let {
+
+            usuario?.let {
                 Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
                 Text(it.email, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
             }
@@ -147,6 +158,16 @@ fun HomeScreen(navController: NavController, appState: AppState) {
 
             Spacer(modifier = Modifier.height(16.dp))
 
+            Button(
+                onClick = { navController.navigate("posts") },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondary
+                )
+            ) {
+                Text("Novedades") // <-- O "Blog", "Noticias", etc.
+            }
+            Spacer(modifier = Modifier.height(16.dp))
+
             ubicacion?.let {
                 Text(
                     text = "\uD83D\uDCCD $it",
@@ -157,5 +178,3 @@ fun HomeScreen(navController: NavController, appState: AppState) {
         }
     }
 }
-
-
