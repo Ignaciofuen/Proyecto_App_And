@@ -2,15 +2,12 @@ package com.example.form.view
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -23,26 +20,30 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.form.viewmodel.UsuarioViewModel
 import com.myapplication.R
-import com.myapplication.data.AppState
-
+import com.myapplication.data.model.UsuarioDto
+import com.myapplication.viewmodel.PostUsuarioViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegistroScreen(
     navController: NavController,
-    viewModel: UsuarioViewModel,
-    appState: AppState
+    formViewModel: UsuarioViewModel = viewModel(),
+    authViewModel: PostUsuarioViewModel = viewModel()
 ) {
-    val estado by viewModel.estado.collectAsState()
+    val estado by formViewModel.estado.collectAsState()
+    val authError by authViewModel.error.collectAsState()
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -66,16 +67,20 @@ fun RegistroScreen(
         Column(
             Modifier
                 .fillMaxSize()
+                .padding(padding)
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
-        ) { Text(
-            text = "Ingresa los datos requeridos.",
-            style = MaterialTheme.typography.headlineMedium
-        )
+        ) {
+            Text(
+                text = "Ingresa los datos requeridos.",
+                style = MaterialTheme.typography.headlineMedium
+            )
             Spacer(modifier = Modifier.height(16.dp))
+
+            // --- CAMPO EMAIL ---
             OutlinedTextField(
                 value = estado.correo,
-                onValueChange = viewModel::onCorreoChange,
+                onValueChange = formViewModel::onCorreoChange,
                 label = { Text("Ingresa tu e-mail") },
                 isError = estado.errores.correo != null,
                 supportingText = {
@@ -86,10 +91,10 @@ fun RegistroScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-            // CONTRASEÑA
+
             OutlinedTextField(
                 value = estado.clave,
-                onValueChange = viewModel::onClaveChange,
+                onValueChange = formViewModel::onClaveChange,
                 label = { Text("Contraseña") },
                 visualTransformation = PasswordVisualTransformation(),
                 isError = estado.errores.clave != null,
@@ -100,11 +105,9 @@ fun RegistroScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
-
-            // REPETIR CONTRASEÑA ✅ NUEVO
             OutlinedTextField(
                 value = estado.repetirClave,
-                onValueChange = viewModel::onRepetirClaveChange,
+                onValueChange = formViewModel::onRepetirClaveChange,
                 label = { Text("Repetir contraseña") },
                 visualTransformation = PasswordVisualTransformation(),
                 isError = estado.errores.repetirClave != null,
@@ -118,19 +121,40 @@ fun RegistroScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
+
+            authError?.let {
+                Text(
+                    text = it,
+                    color = MaterialTheme.colorScheme.error,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
+
             Button(
                 onClick = {
-                    if (viewModel.validarRegistro()) {
-                        val exito = appState.registrarUsuario(
-                            email = estado.correo.trim().lowercase(),
-                            password = estado.clave
+                    if (formViewModel.validarRegistro()) {
+
+                        val emailLimpio = estado.correo.trim().lowercase()
+                        val rolAsignado = if (emailLimpio.endsWith("@admin.cl")) "ADMIN" else "USER"
+
+
+                        val nuevoUsuario = UsuarioDto(
+                            idusu = 0,
+                            email = emailLimpio,
+                            password = estado.clave,
+                            rol = rolAsignado
                         )
-                        if (exito) {
-                            navController.navigate("login") {
-                                popUpTo("registro") { inclusive = true }
+
+
+                        scope.launch {
+                            authViewModel.registrarUsuario(nuevoUsuario)
+
+                            if (authViewModel.error.value == null) {
+                                navController.navigate("login") {
+                                    popUpTo("registro") { inclusive = true }
+                                }
                             }
-                        } else {
-                            println("El usuario ya existe")
                         }
                     }
                 },
@@ -145,4 +169,3 @@ fun RegistroScreen(
         }
     }
 }
-

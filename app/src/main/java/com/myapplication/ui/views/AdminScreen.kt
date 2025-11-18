@@ -13,7 +13,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
@@ -22,14 +21,19 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel // <-- IMPORTA VIEWMODEL
 import androidx.navigation.NavController
 import com.myapplication.R
-import com.myapplication.data.AppState
+import com.myapplication.viewmodel.PostUsuarioViewModel 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AdminScreen(navController: NavController, appState: AppState) {
-    val usuario = appState.usuarioActual
+fun AdminScreen(
+    navController: NavController,
+    viewModel: PostUsuarioViewModel = viewModel()
+) {
+
+    val usuario by viewModel.usuarioActual.collectAsState()
 
     Scaffold(
         topBar = {
@@ -39,7 +43,13 @@ fun AdminScreen(navController: NavController, appState: AppState) {
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 actions = {
-                    IconButton(onClick = { navController.navigate("login") }) {
+                    // BOTÓN DE LOGOUT ACTUALIZADO
+                    IconButton(onClick = {
+                        viewModel.logout() // Llama al ViewModel
+                        navController.navigate("login") { // Navega
+                            popUpTo("admin") { inclusive = true }
+                        }
+                    }) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
@@ -63,6 +73,7 @@ fun AdminScreen(navController: NavController, appState: AppState) {
             )
 
             Spacer(modifier = Modifier.height(16.dp))
+
 
             usuario?.let {
                 Text(

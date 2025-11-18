@@ -1,13 +1,10 @@
 package com.myapplication.ui.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -15,22 +12,30 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.myapplication.data.AppState
+import coil.compose.AsyncImage
 import com.myapplication.R
+import com.myapplication.viewmodel.PostUsuarioViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CarritoScreen(navController: NavController, appState: AppState) {
+fun CarritoScreen(
+    navController: NavController,
+    viewModel: PostUsuarioViewModel = viewModel()
+) {
 
-    val carrito = appState.carrito
+    val carrito by viewModel.carrito.collectAsState()
 
     val formatter = remember {
         NumberFormat.getCurrencyInstance(Locale("es", "CL")).apply {
             maximumFractionDigits = 0
         }
+    }
+    LaunchedEffect(Unit) {
+        viewModel.cargarCarrito()
     }
 
     Scaffold(
@@ -83,14 +88,17 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceAround,
                             ) {
-                                Image(
-                                    painter = painterResource(producto.imagen),
+                                // 2. ¡CAMBIO CRÍTICO: USA COIL!
+                                AsyncImage(
+                                    model = producto.imagen, // Carga la URL
                                     contentDescription = producto.nombre,
                                     modifier = Modifier
                                         .size(80.dp)
                                         .padding(end = 12.dp),
-                                    contentScale = ContentScale.Fit
+                                    contentScale = ContentScale.Fit,
+                                    placeholder = painterResource(id = R.drawable.pc2)
                                 )
+
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
                                     Text(
@@ -98,9 +106,11 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                                         style = MaterialTheme.typography.bodyLarge
                                     )
                                 }
+
+                                // 3. Llama al ViewModel
                                 Button(
                                     onClick = {
-                                        appState.eliminarDelCarrito(producto)
+                                        viewModel.eliminarDelCarrito(producto)
                                     },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.error
@@ -110,7 +120,6 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
                                         painter = painterResource(id = R.drawable.borrar),
                                         contentDescription = "Borrar",
                                     )
-
                                 }
                             }
                         }
@@ -135,9 +144,10 @@ fun CarritoScreen(navController: NavController, appState: AppState) {
 
                 Spacer(Modifier.height(16.dp))
 
+                // 4. Llama al ViewModel
                 Button(
                     onClick = {
-                        appState.vaciarCarrito()
+                        viewModel.vaciarCarrito()
                         navController.popBackStack()
                     },
                     modifier = Modifier.fillMaxWidth().height(50.dp)

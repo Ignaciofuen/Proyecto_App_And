@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -24,36 +23,50 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.form.viewmodel.ResultadoLogin
 import com.example.form.viewmodel.UsuarioViewModel
 import com.myapplication.R
-import com.myapplication.data.AppState
+import com.myapplication.viewmodel.PostUsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
     navController: NavController,
-    viewModel: UsuarioViewModel,
-    appState: AppState
+
+    formViewModel: UsuarioViewModel = viewModel(),
+    authViewModel: PostUsuarioViewModel = viewModel()
 ) {
-    val estado by viewModel.estado.collectAsState()
-    var mensajeError by remember { mutableStateOf<String?>(null) }
+    // 2. Observamos los estados
+    val formEstado by formViewModel.estado.collectAsState()
+    val authUsuario by authViewModel.usuarioActual.collectAsState()
+    val authError by authViewModel.error.collectAsState()
+
+    // 3. Efecto que reacciona al login
+    LaunchedEffect(authUsuario) {
+        authUsuario?.let {
+
+            val ruta = if (it.rol.equals("ADMIN", ignoreCase = true)) "admin" else "home"
+            navController.navigate(ruta) {
+                popUpTo("login") { inclusive = true }
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
             TopAppBar(title = { Text("Inicio de Sesión") },
-                    colors = TopAppBarDefaults.topAppBarColors(
+                colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 actions = {
-                        Icon(
-                            painter = painterResource(id = R.drawable.user),
-                            contentDescription = "User icon",
-                            tint = Color(0xFFFFFFFF),
-                            modifier = Modifier.padding(end = 16.dp)
-                        )
+                    Icon(
+                        painter = painterResource(id = R.drawable.user),
+                        contentDescription = "User icon",
+                        tint = Color(0xFFFFFFFF),
+                        modifier = Modifier.padding(end = 16.dp)
+                    )
                 }
             )
         }
@@ -71,12 +84,12 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
             OutlinedTextField(
-                value = estado.correo,
-                onValueChange = viewModel::onCorreoChange,
+                value = formEstado.correo,
+                onValueChange = formViewModel::onCorreoChange,
                 label = { Text("Ingresa tu e-mail") },
-                isError = estado.errores.correo != null,
+                isError = formEstado.errores.correo != null,
                 supportingText = {
-                    estado.errores.correo?.let {
+                    formEstado.errores.correo?.let {
                         Text(it, color = MaterialTheme.colorScheme.error)
                     }
                 },
@@ -84,13 +97,13 @@ fun LoginScreen(
             )
 
             OutlinedTextField(
-                value = estado.clave,
-                onValueChange = viewModel::onClaveChange,
+                value = formEstado.clave,
+                onValueChange = formViewModel::onClaveChange,
                 label = { Text("Contraseña") },
                 visualTransformation = PasswordVisualTransformation(),
-                isError = estado.errores.clave != null,
+                isError = formEstado.errores.clave != null,
                 supportingText = {
-                    estado.errores.clave?.let {
+                    formEstado.errores.clave?.let {
                         Text(it, color = MaterialTheme.colorScheme.error)
                     }
                 },
@@ -98,32 +111,18 @@ fun LoginScreen(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            mensajeError?.let {
+            authError?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colorScheme.error,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
             }
+
+
             Button(
                 onClick = {
-                    val resultado = viewModel.validarLogin(appState)
-
-                    when (resultado) {
-                        is ResultadoLogin.ExitoAdmin -> {
-                            navController.navigate("admin") {
-                                popUpTo("login") { inclusive = true }
-                            }
-                        }
-                        is ResultadoLogin.ExitoUsuario -> {
-                            navController.navigate("home") {
-                                popUpTo("login") { inclusive = true }
-                            }
-                        }
-                        is ResultadoLogin.Error -> {
-                            mensajeError = resultado.mensaje
-                        }
-                    }
+                    authViewModel.login(formEstado.correo.trim().lowercase(), formEstado.clave)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {
@@ -140,4 +139,3 @@ fun LoginScreen(
         }
     }
 }
-

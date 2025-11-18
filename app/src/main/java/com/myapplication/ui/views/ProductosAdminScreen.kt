@@ -1,11 +1,9 @@
 package com.myapplication.ui.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.text.KeyboardOptions
-// --- NINGUNA importación de androidx.compose.material.icons ---
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,22 +14,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import coil.compose.AsyncImage
 import com.myapplication.R
-import com.myapplication.data.AppState
-import com.myapplication.data.Producto
+import com.myapplication.data.model.ProductoDto
+import com.myapplication.viewmodel.ProductoViewModel
 import java.text.NumberFormat
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ProductosAdminScreen(navController: NavController, appState: AppState) {
-
+fun ProductosAdminScreen(
+    navController: NavController,
+    viewModel: ProductoViewModel = viewModel()
+) {
     var mostrarDialogoAgregar by remember { mutableStateOf(false) }
     var mostrarDialogoEditar by remember { mutableStateOf(false) }
     var mostrarDialogoEliminar by remember { mutableStateOf(false) }
 
-    var productoSeleccionado by remember { mutableStateOf<Producto?>(null) }
+    var productoSeleccionado by remember { mutableStateOf<ProductoDto?>(null) } // <-- Usa el DTO
+
+    // 1. Observa los productos desde el ViewModel
+    val productos by viewModel.productos.collectAsState()
 
     val formatter = remember {
         NumberFormat.getCurrencyInstance(Locale("es", "CL")).apply {
@@ -75,25 +80,29 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                 .padding(padding)
                 .padding(16.dp)
         ) {
-            items(appState.productos) { producto ->
+
+            items(productos) { producto -> // 'producto' ahora es ProductoDto
                 Card(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 8.dp),
-                        elevation = CardDefaults.cardElevation(4.dp)
+                    elevation = CardDefaults.cardElevation(4.dp)
                 ) {
                     Row(
                         modifier = Modifier.padding(12.dp),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Image(
-                            painter = painterResource(producto.imagen),
+
+                        AsyncImage(
+                            model = producto.imagen, // Carga la URL
                             contentDescription = producto.nombre,
                             modifier = Modifier
                                 .size(60.dp)
                                 .padding(end = 12.dp),
-                            contentScale = ContentScale.Fit
+                            contentScale = ContentScale.Fit,
+                            placeholder = painterResource(id = R.drawable.pc2)
                         )
+
                         Column(modifier = Modifier.weight(1f)) {
                             Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
                             Text(producto.categoria, style = MaterialTheme.typography.bodySmall)
@@ -104,7 +113,7 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                             )
                         }
 
-                        // Botón EDITAR (con texto)
+                        // Botón EDITAR
                         TextButton(onClick = {
                             productoSeleccionado = producto
                             mostrarDialogoEditar = true
@@ -115,7 +124,7 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
                             )
                         }
 
-                        // Botón ELIMINAR (con texto y color)
+                        // Botón ELIMINAR
                         TextButton(onClick = {
                             productoSeleccionado = producto
                             mostrarDialogoEliminar = true
@@ -132,12 +141,21 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
     }
 
 
+
+
     if (mostrarDialogoAgregar) {
-        FormularioProductoDialog(
+        FormularioProductoDialog( // Llama al diálogo actualizado)
             onDismiss = { mostrarDialogoAgregar = false },
-            onSave = { nombre, desc, precio, imgRes, categoria ->
-                val imagen = if(imgRes == 0) R.drawable.pc2 else imgRes
-                appState.agregarProducto(nombre, desc, precio, imagen, categoria)
+            onSave = { nombre, desc, precio, imgUrl, categoria ->
+                val nuevoDto = ProductoDto(
+                    id = 0, // El backend lo ignora y genera uno nuevo
+                    nombre = nombre,
+                    descripcion = desc,
+                    categoria = categoria,
+                    imagen = imgUrl,
+                    precio = precio
+                )
+                viewModel.agregarProducto(nuevoDto) // Llama al VM
                 mostrarDialogoAgregar = false
             }
         )
@@ -145,11 +163,18 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
 
     if (mostrarDialogoEditar && productoSeleccionado != null) {
         FormularioProductoDialog(
-            producto = productoSeleccionado,
+            producto = productoSeleccionado, // Pasa el DTO
             onDismiss = { mostrarDialogoEditar = false },
-            onSave = { nombre, desc, precio, imgRes, categoria ->
-                val imagen = if(imgRes == 0) productoSeleccionado!!.imagen else imgRes
-                appState.editarProducto(productoSeleccionado!!.id, nombre, desc, precio, imagen, categoria)
+            onSave = { nombre, desc, precio, imgUrl, categoria ->
+                val dtoActualizado = ProductoDto(
+                    id = productoSeleccionado!!.id, // Usa el ID existente
+                    nombre = nombre,
+                    descripcion = desc,
+                    categoria = categoria,
+                    imagen = if(imgUrl.isBlank()) productoSeleccionado!!.imagen else imgUrl,
+                    precio = precio
+                )
+                viewModel.editarProducto(dtoActualizado.id, dtoActualizado) // Llama al VM
                 mostrarDialogoEditar = false
             }
         )
@@ -163,15 +188,12 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
             confirmButton = {
                 Button(
                     onClick = {
-                        appState.eliminarProducto(productoSeleccionado!!)
+                        viewModel.eliminarProducto(productoSeleccionado!!) // Llama al VM
                         mostrarDialogoEliminar = false
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.error)
                 ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.addproducto),
-                        contentDescription = "Agregar producto"
-                    )
+                    Text("Eliminar") // Cambiado el icono por texto
                 }
             },
             dismissButton = {
@@ -183,17 +205,19 @@ fun ProductosAdminScreen(navController: NavController, appState: AppState) {
     }
 }
 
+
 @Composable
 fun FormularioProductoDialog(
-    producto: Producto? = null,
+    producto: ProductoDto? = null,
     onDismiss: () -> Unit,
-    onSave: (nombre: String, descripcion: String, precio: Int, imagenResId: Int, categoria: String) -> Unit
+
+    onSave: (nombre: String, descripcion: String, precio: Int, imagenUrl: String, categoria: String) -> Unit
 ) {
     var nombre by remember { mutableStateOf(producto?.nombre ?: "") }
     var descripcion by remember { mutableStateOf(producto?.descripcion ?: "") }
     var categoria by remember { mutableStateOf(producto?.categoria ?: "") }
     var precio by remember { mutableStateOf(producto?.precio?.toString() ?: "") }
-    var imagenResId by remember { mutableStateOf(producto?.imagen?.toString() ?: "") }
+    var imagenUrl by remember { mutableStateOf(producto?.imagen ?: "") } // Usa el String
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -231,12 +255,14 @@ fun FormularioProductoDialog(
                             modifier = Modifier.fillMaxWidth()
                         )
                         Spacer(Modifier.height(8.dp))
+
+
                         OutlinedTextField(
-                            value = imagenResId,
-                            onValueChange = { imagenResId = it },
-                            label = { Text("ID Recurso Imagen (Ej: R.drawable.img)") },
+                            value = imagenUrl,
+                            onValueChange = { imagenUrl = it },
+                            label = { Text("URL de la Imagen (http://...)") },
                             placeholder = { Text(if(producto != null) "Dejar vacío para no cambiar" else "") },
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Uri), // Teclado para URLs
                             modifier = Modifier.fillMaxWidth()
                         )
                     }
@@ -246,9 +272,8 @@ fun FormularioProductoDialog(
         confirmButton = {
             Button(onClick = {
                 val precioInt = precio.toIntOrNull() ?: 0
-                val imagenInt = imagenResId.toIntOrNull() ?: 0
 
-                onSave(nombre, descripcion, precioInt, imagenInt, categoria)
+                onSave(nombre, descripcion, precioInt, imagenUrl, categoria)
             }) {
                 Text("Guardar")
             }
