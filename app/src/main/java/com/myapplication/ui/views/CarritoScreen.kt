@@ -88,7 +88,6 @@ fun CarritoScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceAround,
                             ) {
-                                // 2. ¡CAMBIO CRÍTICO: USA COIL!
                                 AsyncImage(
                                     model = producto.imagen, // Carga la URL
                                     contentDescription = producto.nombre,
@@ -107,7 +106,6 @@ fun CarritoScreen(
                                     )
                                 }
 
-                                // 3. Llama al ViewModel
                                 Button(
                                     onClick = {
                                         viewModel.eliminarDelCarrito(producto)
@@ -144,7 +142,6 @@ fun CarritoScreen(
 
                 Spacer(Modifier.height(16.dp))
 
-                // 4. Llama al ViewModel
                 Button(
                     onClick = {
                         viewModel.vaciarCarrito()

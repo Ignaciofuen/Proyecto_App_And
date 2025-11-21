@@ -13,18 +13,14 @@ class PostUsuarioViewModel : ViewModel() {
 
     private val repository = UsuarioRepository()
 
-
     private val _usuarioActual = MutableStateFlow<UsuarioDto?>(null)
     val usuarioActual: StateFlow<UsuarioDto?> = _usuarioActual.asStateFlow() // Usa asStateFlow
 
     private val _error = MutableStateFlow<String?>(null)
     val error: StateFlow<String?> = _error.asStateFlow() // Usa asStateFlow
 
-
     private val _carrito = MutableStateFlow<List<ProductoDto>>(emptyList())
     val carrito: StateFlow<List<ProductoDto>> = _carrito.asStateFlow()
-
-
 
     fun login(email: String, clave: String) {
         viewModelScope.launch {
@@ -34,7 +30,7 @@ class PostUsuarioViewModel : ViewModel() {
                 _error.value = null
                 cargarCarrito()
             } catch (e: Exception) {
-                _error.value = "Error de login: ${e.localizedMessage}"
+                _error.value = e.localizedMessage
             }
         }
     }
@@ -45,17 +41,16 @@ class PostUsuarioViewModel : ViewModel() {
                 repository.registrarUsuario(usuario)
                 _error.value = null
             } catch (e: Exception) {
-                _error.value = "Error de registro: ${e.localizedMessage}"
+                _error.value = e.localizedMessage
             }
         }
     }
 
     fun logout() {
         _usuarioActual.value = null
-        _carrito.value = emptyList() // Limpia el carrito al salir
+        _carrito.value = emptyList()
     }
 
-    // --- Funciones del Carrito
 
     fun cargarCarrito() {
         val usuario = _usuarioActual.value ?: return
@@ -104,7 +99,4 @@ class PostUsuarioViewModel : ViewModel() {
             }
         }
     }
-
-
-
 }

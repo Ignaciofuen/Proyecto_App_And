@@ -141,11 +141,6 @@ fun HomeScreen(
 
             Button(
                 onClick = {
-                    mostrarNotificacion(
-                        context = context,
-                        titulo = "¡Nuevo catálogo disponible!",
-                        mensaje = "Explora las últimas ofertas gamer 🎮"
-                    )
                     navController.navigate("productos")
                 },
                 colors = ButtonDefaults.buttonColors(
@@ -164,7 +159,7 @@ fun HomeScreen(
                     containerColor = MaterialTheme.colorScheme.secondary
                 )
             ) {
-                Text("Novedades") // <-- O "Blog", "Noticias", etc.
+                Text("Novedades")
             }
             Spacer(modifier = Modifier.height(16.dp))
 

@@ -8,7 +8,6 @@ import retrofit2.http.*
 import retrofit2.Response
 interface ApiService {
 
-    // --- PRODUCTOS ---
     @GET("api/productos")
     suspend fun getAllProductos(): List<ProductoDto>
 
@@ -23,17 +22,15 @@ interface ApiService {
 
     @DELETE("api/productos/{id}")
     suspend fun deleteProducto(@Path("id") id: Long): Response<Unit>
-    // USUARIO y AUTENTICACIÓN
     @GET("api/auth/usuarios")
     suspend fun getAllUsuarios(): List<UsuarioDto>
 
-    @POST("api/auth/registro")
-    suspend fun registrarUsuario(@Body usuario: UsuarioDto): UsuarioDto
-
     @POST("api/auth/login")
-    suspend fun login(@Body loginRequest: LoginRequestDto): UsuarioDto
+    suspend fun login(@Body loginRequest: LoginRequestDto): Response<UsuarioDto>
 
-    // --- CARRITO
+    @POST("api/auth/registro")
+    suspend fun registrarUsuario(@Body usuario: UsuarioDto): Response<UsuarioDto>
+
     @GET("api/carrito/{userId}")
     suspend fun obtenerCarrito(@Path("userId") userId: Long): List<ProductoDto>
 

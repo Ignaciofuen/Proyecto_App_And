@@ -16,10 +16,12 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.myapplication.R
+import com.myapplication.utils.mostrarNotificacion
 import com.myapplication.viewmodel.ProductoViewModel
 import com.myapplication.viewmodel.PostUsuarioViewModel
 
@@ -30,6 +32,8 @@ fun ProductosScreen(
     productoViewModel: ProductoViewModel = viewModel(),
     usuarioViewModel: PostUsuarioViewModel = viewModel() 
 ) {
+
+    val context = LocalContext.current
 
     val productos by productoViewModel.productos.collectAsState()
     val carrito by usuarioViewModel.carrito.collectAsState()
@@ -63,12 +67,11 @@ fun ProductosScreen(
                                 tint = Color(0xFFFFFFFF)
                             )
                         }
-
                         Text(
                             text = "(${carrito.size})",
                             color = Color.White,
                             style = MaterialTheme.typography.titleMedium,
-                            modifier = Modifier.padding(end = 8.dp)
+                            modifier = Modifier.padding(end = 5.dp)
                         )
                     }
                 }
@@ -103,7 +106,6 @@ fun ProductosScreen(
                     ) {
                         Column(modifier = Modifier.padding(18.dp)) {
 
-
                             AsyncImage(
                                 model = producto.imagen, // Carga la URL
                                 contentDescription = producto.nombre,
@@ -129,7 +131,11 @@ fun ProductosScreen(
                             Spacer(Modifier.height(6.dp))
 
                             Button(
-                                onClick = {
+                                onClick = {  mostrarNotificacion(
+                                    context = context,
+                                    titulo = "¡Producto agregado al carrito!",
+                                    mensaje = "¡Sigue explorando productos de nuestra tienda o completa tu pago de forma rápida! 🎮"
+                                )
                                     usuarioViewModel.agregarAlCarrito(producto)
                                 },
                                 modifier = Modifier.fillMaxWidth()
