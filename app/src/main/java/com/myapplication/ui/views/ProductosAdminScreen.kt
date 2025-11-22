@@ -14,7 +14,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.myapplication.R
@@ -27,7 +26,7 @@ import java.util.Locale
 @Composable
 fun ProductosAdminScreen(
     navController: NavController,
-    viewModel: ProductoViewModel = viewModel()
+    viewModel: ProductoViewModel
 ) {
     var mostrarDialogoAgregar by remember { mutableStateOf(false) }
     var mostrarDialogoEditar by remember { mutableStateOf(false) }
@@ -35,7 +34,6 @@ fun ProductosAdminScreen(
 
     var productoSeleccionado by remember { mutableStateOf<ProductoDto?>(null) } // <-- Usa el DTO
 
-    // 1. Observa los productos desde el ViewModel
     val productos by viewModel.productos.collectAsState()
 
     val formatter = remember {
@@ -141,8 +139,6 @@ fun ProductosAdminScreen(
     }
 
 
-
-
     if (mostrarDialogoAgregar) {
         FormularioProductoDialog( // Llama al diálogo actualizado)
             onDismiss = { mostrarDialogoAgregar = false },
@@ -167,7 +163,7 @@ fun ProductosAdminScreen(
             onDismiss = { mostrarDialogoEditar = false },
             onSave = { nombre, desc, precio, imgUrl, categoria ->
                 val dtoActualizado = ProductoDto(
-                    id = productoSeleccionado!!.id, // Usa el ID existente
+                    id = productoSeleccionado!!.id,
                     nombre = nombre,
                     descripcion = desc,
                     categoria = categoria,
@@ -204,7 +200,6 @@ fun ProductosAdminScreen(
         )
     }
 }
-
 
 @Composable
 fun FormularioProductoDialog(

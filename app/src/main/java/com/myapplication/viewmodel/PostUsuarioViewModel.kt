@@ -1,23 +1,24 @@
 package com.myapplication.viewmodel
+
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.myapplication.data.model.ProductoDto
 import com.myapplication.data.model.UsuarioDto
+import com.myapplication.data.model.ProductoDto
 import com.myapplication.repository.UsuarioRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class PostUsuarioViewModel : ViewModel() {
-
-    private val repository = UsuarioRepository()
+class PostUsuarioViewModel(
+    private val repository: UsuarioRepository
+) : ViewModel() {
 
     private val _usuarioActual = MutableStateFlow<UsuarioDto?>(null)
-    val usuarioActual: StateFlow<UsuarioDto?> = _usuarioActual.asStateFlow() // Usa asStateFlow
+    val usuarioActual: StateFlow<UsuarioDto?> = _usuarioActual.asStateFlow()
 
     private val _error = MutableStateFlow<String?>(null)
-    val error: StateFlow<String?> = _error.asStateFlow() // Usa asStateFlow
+    val error: StateFlow<String?> = _error.asStateFlow()
 
     private val _carrito = MutableStateFlow<List<ProductoDto>>(emptyList())
     val carrito: StateFlow<List<ProductoDto>> = _carrito.asStateFlow()
@@ -28,9 +29,11 @@ class PostUsuarioViewModel : ViewModel() {
                 val usuarioLogueado = repository.login(email, clave)
                 _usuarioActual.value = usuarioLogueado
                 _error.value = null
+
                 cargarCarrito()
+
             } catch (e: Exception) {
-                _error.value = e.localizedMessage
+                _error.value = e.localizedMessage ?: "Error al iniciar sesión"
             }
         }
     }
@@ -51,9 +54,9 @@ class PostUsuarioViewModel : ViewModel() {
         _carrito.value = emptyList()
     }
 
-
     fun cargarCarrito() {
         val usuario = _usuarioActual.value ?: return
+
         viewModelScope.launch {
             try {
                 val productos = repository.obtenerCarrito(usuario.idusu)
@@ -66,6 +69,7 @@ class PostUsuarioViewModel : ViewModel() {
 
     fun agregarAlCarrito(producto: ProductoDto) {
         val usuario = _usuarioActual.value ?: return
+
         viewModelScope.launch {
             try {
                 repository.agregarAlCarrito(usuario.idusu, producto.id)
@@ -78,6 +82,7 @@ class PostUsuarioViewModel : ViewModel() {
 
     fun eliminarDelCarrito(producto: ProductoDto) {
         val usuario = _usuarioActual.value ?: return
+
         viewModelScope.launch {
             try {
                 repository.eliminarDelCarrito(usuario.idusu, producto.id)
@@ -90,6 +95,7 @@ class PostUsuarioViewModel : ViewModel() {
 
     fun vaciarCarrito() {
         val usuario = _usuarioActual.value ?: return
+
         viewModelScope.launch {
             try {
                 repository.vaciarCarrito(usuario.idusu)

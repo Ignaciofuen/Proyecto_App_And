@@ -32,20 +32,18 @@ import com.myapplication.viewmodel.PostUsuarioViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginScreen(
+
     navController: NavController,
-
     formViewModel: UsuarioViewModel = viewModel(),
-    authViewModel: PostUsuarioViewModel = viewModel()
-) {
-    // 2. Observamos los estados
-    val formEstado by formViewModel.estado.collectAsState()
-    val authUsuario by authViewModel.usuarioActual.collectAsState()
-    val authError by authViewModel.error.collectAsState()
+    viewModel: PostUsuarioViewModel = viewModel()
 
-    // 3. Efecto que reacciona al login
+) {
+    val formEstado by formViewModel.estado.collectAsState()
+    val authUsuario by viewModel.usuarioActual.collectAsState()
+    val authError by viewModel.error.collectAsState()
+
     LaunchedEffect(authUsuario) {
         authUsuario?.let {
-
             val ruta = if (it.rol.equals("ADMIN", ignoreCase = true)) "admin" else "home"
             navController.navigate(ruta) {
                 popUpTo("login") { inclusive = true }
@@ -119,10 +117,9 @@ fun LoginScreen(
                 )
             }
 
-
             Button(
                 onClick = {
-                    authViewModel.login(formEstado.correo.trim().lowercase(), formEstado.clave)
+                    viewModel.login(formEstado.correo.trim().lowercase(), formEstado.clave)
                 },
                 modifier = Modifier.fillMaxWidth()
             ) {

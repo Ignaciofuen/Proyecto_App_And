@@ -52,11 +52,11 @@ class UsuarioRepository {
         return api.obtenerCarrito(userId)
     }
 
-    suspend fun agregarAlCarrito(userId: Long, productoId: Long) {
+    suspend fun agregarAlCarrito(userId: Long, productoId: Int) {
         api.agregarAlCarrito(userId, productoId)
     }
 
-    suspend fun eliminarDelCarrito(userId: Long, productoId: Long) {
+    suspend fun eliminarDelCarrito(userId: Long, productoId: Int) {
         api.eliminarDelCarrito(userId, productoId)
     }
 

@@ -18,10 +18,10 @@ interface ApiService {
     suspend fun saveProducto(@Body producto: ProductoDto): ProductoDto
 
     @PUT("api/productos/{id}")
-    suspend fun updateProducto(@Path("id") id: Long, @Body producto: ProductoDto): ProductoDto
+    suspend fun updateProducto(@Path("id") id: Int, @Body producto: ProductoDto): ProductoDto
 
     @DELETE("api/productos/{id}")
-    suspend fun deleteProducto(@Path("id") id: Long): Response<Unit>
+    suspend fun deleteProducto(@Path("id") id: Int): Response<Unit>
     @GET("api/auth/usuarios")
     suspend fun getAllUsuarios(): List<UsuarioDto>
 
@@ -35,10 +35,10 @@ interface ApiService {
     suspend fun obtenerCarrito(@Path("userId") userId: Long): List<ProductoDto>
 
     @POST("api/carrito/{userId}/agregar/{productoId}")
-    suspend fun agregarAlCarrito(@Path("userId") userId: Long, @Path("productoId") productoId: Long)
+    suspend fun agregarAlCarrito(@Path("userId") userId: Long, @Path("productoId") productoId: Int)
 
     @DELETE("api/carrito/{userId}/quitar/{productoId}")
-    suspend fun eliminarDelCarrito(@Path("userId") userId: Long, @Path("productoId") productoId: Long)
+    suspend fun eliminarDelCarrito(@Path("userId") userId: Long, @Path("productoId") productoId: Int)
 
     @DELETE("api/carrito/{userId}/vaciar")
     suspend fun vaciarCarrito(@Path("userId") userId: Long)

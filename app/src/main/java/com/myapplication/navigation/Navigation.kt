@@ -15,42 +15,71 @@ import com.myapplication.ui.views.ProductosScreen
 import com.myapplication.ui.views.PostScreen
 import com.myapplication.viewmodel.PostUsuarioViewModel
 import com.myapplication.viewmodel.ProductoViewModel
-
 @Composable
-fun AppNavigation(navController: NavHostController){
-
-
-    val authViewModel: PostUsuarioViewModel = viewModel()
-    val productoViewModel: ProductoViewModel = viewModel()
+fun AppNavigation(
+    navController: NavHostController,
+    viewModel: PostUsuarioViewModel
+) {
+    val productoViewModel: ProductoViewModel =
+        androidx.lifecycle.viewmodel.compose.viewModel()
 
     NavHost(
-        navController = navController, startDestination = "login",
-    ){
-        composable ("login") {
+        navController = navController,
+        startDestination = "login"
+    ) {
 
-            LoginScreen(navController, authViewModel = authViewModel)
+        composable("login") {
+            LoginScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
-        composable ("registro") {
-            RegistroScreen(navController, authViewModel = authViewModel)
-        }
-        composable ("home"){
-            HomeScreen(navController, viewModel = authViewModel)
-        }
-        composable ("productos"){
 
-            ProductosScreen(navController, productoViewModel, authViewModel)
+        composable("registro") {
+            RegistroScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
-        composable ("admin"){
-            AdminScreen(navController, viewModel = authViewModel)
+
+        composable("home") {
+            HomeScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
-        composable ("carrito"){
-            CarritoScreen(navController, viewModel = authViewModel)
+
+        composable("productos") {
+            ProductosScreen(
+                navController = navController,
+                productoViewModel = productoViewModel,
+                usuarioViewModel = viewModel
+            )
         }
-        composable ("productosAdmin"){
-            ProductosAdminScreen(navController, viewModel = productoViewModel)
+
+        composable("admin") {
+            AdminScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
         }
-        composable ("posts") {
-            PostScreen(navController)
+
+        composable("carrito") {
+            CarritoScreen(
+                navController = navController,
+                viewModel = viewModel
+            )
+        }
+
+        composable("productosAdmin") {
+            ProductosAdminScreen(
+                navController = navController,
+                viewModel = productoViewModel
+            )
+        }
+
+        composable("posts") {
+            PostScreen(navController = navController)
         }
     }
 }

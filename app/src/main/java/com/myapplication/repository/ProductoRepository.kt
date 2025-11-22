@@ -15,15 +15,14 @@ class ProductoRepository {
         return api.saveProducto(producto)
     }
 
-    suspend fun updateProducto(id: Long, producto: ProductoDto): ProductoDto {
+    suspend fun updateProducto(id: Int, producto: ProductoDto): ProductoDto {
         return api.updateProducto(id, producto)
     }
 
     // --- AQUÍ ESTÁ EL CAMBIO ---
-    suspend fun deleteProducto(id: Long) {
+    suspend fun deleteProducto(id: Int) {
 
         val response = api.deleteProducto(id)
-
 
         if (!response.isSuccessful) {
             throw Exception("Error al eliminar: ${response.code()}")

@@ -47,7 +47,7 @@ class ProductoViewModel : ViewModel() {
         }
     }
 
-    fun editarProducto(id: Long, producto: ProductoDto) {
+    fun editarProducto(id: Int, producto: ProductoDto) {
         viewModelScope.launch {
             try {
                 _error.value = null

@@ -21,6 +21,7 @@ material3 = "1.2.1"
 datastore = "1.1.7"
 gson = "2.13.2"
 playservices-location = "21.0.1"
+junitJunit = "4.12"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -52,6 +53,7 @@ gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
 
 # Play Services Location
 google-playservices-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "playservices-location" }
+junit-junit = { group = "junit", name = "junit", version.ref = "junitJunit" }
 
 
 [plugins]

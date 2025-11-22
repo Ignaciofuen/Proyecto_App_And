@@ -34,9 +34,6 @@ android {
     kotlinOptions {
         jvmTarget = "11"
 
-
-
-
     }
     buildFeatures {
         compose = true
@@ -48,20 +45,17 @@ android {
 }
 
 dependencies {
-    // Dependencias de DataStore y Gson (usando alias)
+
     implementation(libs.androidx.datastore.preferences)
     implementation(libs.gson)
 
-
-    // Dependencias de Room (usando alias)
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
+    implementation(libs.junit.junit)
     ksp(libs.androidx.room.compiler)
 
-    // Play Services (usando alias)
     implementation(libs.google.playservices.location)
 
-    // Dependencias estándar (usando alias)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -73,13 +67,11 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
 
-    // Retrofit (para hacer las llamadas a la API) ---
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
     implementation("com.squareup.okhttp3:logging-interceptor:4.11.0")
     implementation("io.coil-kt:coil-compose:2.5.0")
 
-    // Dependencias de Test
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -89,6 +81,14 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     testImplementation("junit:junit:4.13.2")
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.mockito:mockito-core:5.2.0")
+    testImplementation("org.mockito.kotlin:mockito-kotlin:5.1.0")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
+
+    testImplementation("io.kotest:kotest-runner-junit5:5.7.2")
+    testImplementation("io.kotest:kotest-assertions-core:5.7.2")
+    testImplementation("io.kotest:kotest-property:5.7.2")
+    testImplementation("io.mockk:mockk:1.13.8")
+
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.3")
 }

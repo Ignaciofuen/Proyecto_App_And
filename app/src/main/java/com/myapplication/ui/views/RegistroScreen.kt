@@ -38,16 +38,17 @@ import kotlinx.coroutines.launch
 @Composable
 fun RegistroScreen(
     navController: NavController,
-    formViewModel: UsuarioViewModel = viewModel(),
-    authViewModel: PostUsuarioViewModel = viewModel()
+    viewModel: PostUsuarioViewModel,
+    formViewModel: UsuarioViewModel = viewModel()
 ) {
     val estado by formViewModel.estado.collectAsState()
-    val authError by authViewModel.error.collectAsState()
+    val error by viewModel.error.collectAsState()
     val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("Registro de usuario") },
+            TopAppBar(
+                title = { Text("Registro de usuario") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
@@ -56,14 +57,14 @@ fun RegistroScreen(
                     Icon(
                         painter = painterResource(id = R.drawable.newuser),
                         contentDescription = "User icon",
-                        tint = Color(0xFFFFFFFF),
+                        tint = Color.White,
                         modifier = Modifier.padding(end = 16.dp)
                     )
                 }
             )
         }
-
     ) { padding ->
+
         Column(
             Modifier
                 .fillMaxSize()
@@ -71,13 +72,15 @@ fun RegistroScreen(
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
+
             Text(
                 text = "Ingresa los datos requeridos.",
                 style = MaterialTheme.typography.headlineMedium
             )
+
             Spacer(modifier = Modifier.height(16.dp))
 
-            // --- CAMPO EMAIL ---
+            // ----------- EMAIL -----------
             OutlinedTextField(
                 value = estado.correo,
                 onValueChange = formViewModel::onCorreoChange,
@@ -91,7 +94,7 @@ fun RegistroScreen(
                 modifier = Modifier.fillMaxWidth()
             )
 
-
+            // ----------- CONTRASEÑA -----------
             OutlinedTextField(
                 value = estado.clave,
                 onValueChange = formViewModel::onClaveChange,
@@ -105,6 +108,8 @@ fun RegistroScreen(
                 },
                 modifier = Modifier.fillMaxWidth()
             )
+
+            // ----------- REPETIR CONTRASEÑA -----------
             OutlinedTextField(
                 value = estado.repetirClave,
                 onValueChange = formViewModel::onRepetirClaveChange,
@@ -121,8 +126,8 @@ fun RegistroScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
-            authError?.let {
+            // ----------- ERROR DEL BACKEND -----------
+            error?.let {
                 Text(
                     text = it,
                     color = MaterialTheme.colorScheme.error,
@@ -130,14 +135,15 @@ fun RegistroScreen(
                 )
             }
 
-
+            // ----------- BOTÓN REGISTRO -----------
             Button(
                 onClick = {
+
                     if (formViewModel.validarRegistro()) {
 
                         val emailLimpio = estado.correo.trim().lowercase()
-                        val rolAsignado = if (emailLimpio.endsWith("@admin.cl")) "ADMIN" else "USER"
-
+                        val rolAsignado =
+                            if (emailLimpio.endsWith("@admin.cl")) "ADMIN" else "USER"
 
                         val nuevoUsuario = UsuarioDto(
                             idusu = 0,
@@ -146,11 +152,11 @@ fun RegistroScreen(
                             rol = rolAsignado
                         )
 
-
                         scope.launch {
-                            authViewModel.registrarUsuario(nuevoUsuario)
 
-                            if (authViewModel.error.value == null) {
+                            viewModel.registrarUsuario(nuevoUsuario)
+
+                            if (viewModel.error.value == null) {
                                 navController.navigate("login") {
                                     popUpTo("registro") { inclusive = true }
                                 }
@@ -163,7 +169,9 @@ fun RegistroScreen(
                 Text("Registrarse")
             }
 
-            TextButton(onClick = { navController.navigate("login") }) {
+            TextButton(
+                onClick = { navController.navigate("login") }
+            ) {
                 Text("¿Ya tienes una cuenta creada? Inicia sesión")
             }
         }
