@@ -24,7 +24,7 @@ import java.util.Locale
 @Composable
 fun CarritoScreen(
     navController: NavController,
-    viewModel: PostUsuarioViewModel = viewModel()
+    viewModel: PostUsuarioViewModel
 ) {
 
     val carrito by viewModel.carrito.collectAsState()
@@ -34,6 +34,7 @@ fun CarritoScreen(
             maximumFractionDigits = 0
         }
     }
+
     LaunchedEffect(Unit) {
         viewModel.cargarCarrito()
     }
@@ -51,7 +52,7 @@ fun CarritoScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.volver),
                             contentDescription = "Volver",
-                            tint = Color(0xFFFFFFFF)
+                            tint = Color.White
                         )
                     }
                 }
@@ -64,6 +65,7 @@ fun CarritoScreen(
                 .padding(padding)
                 .padding(18.dp)
         ) {
+
             if (carrito.isEmpty()) {
                 Box(
                     modifier = Modifier.fillMaxSize(),
@@ -75,7 +77,8 @@ fun CarritoScreen(
                     )
                 }
             } else {
-                LazyColumn(modifier = Modifier.weight(1.0f)) {
+
+                LazyColumn(modifier = Modifier.weight(1f)) {
                     items(carrito) { producto ->
                         Card(
                             modifier = Modifier
@@ -88,8 +91,9 @@ fun CarritoScreen(
                                 verticalAlignment = Alignment.CenterVertically,
                                 horizontalArrangement = Arrangement.SpaceAround,
                             ) {
+
                                 AsyncImage(
-                                    model = producto.imagen, // Carga la URL
+                                    model = producto.imagen,
                                     contentDescription = producto.nombre,
                                     modifier = Modifier
                                         .size(80.dp)
@@ -101,22 +105,20 @@ fun CarritoScreen(
                                 Column(modifier = Modifier.weight(1f)) {
                                     Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
                                     Text(
-                                        formatter.format(producto.precio), // Precio formateado
+                                        formatter.format(producto.precio),
                                         style = MaterialTheme.typography.bodyLarge
                                     )
                                 }
 
                                 Button(
-                                    onClick = {
-                                        viewModel.eliminarDelCarrito(producto)
-                                    },
+                                    onClick = { viewModel.eliminarDelCarrito(producto) },
                                     colors = ButtonDefaults.buttonColors(
                                         containerColor = MaterialTheme.colorScheme.error
                                     )
                                 ) {
                                     Icon(
                                         painter = painterResource(id = R.drawable.borrar),
-                                        contentDescription = "Borrar",
+                                        contentDescription = "Borrar"
                                     )
                                 }
                             }
@@ -127,12 +129,14 @@ fun CarritoScreen(
                 Spacer(Modifier.height(16.dp))
 
                 val total = carrito.sumOf { it.precio }
+
                 Text(
                     text = "Items totales: ${carrito.size}",
                     style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.align(Alignment.End)
                 )
+
                 Text(
                     text = "Total: ${formatter.format(total)}",
                     style = MaterialTheme.typography.headlineMedium,
@@ -147,7 +151,9 @@ fun CarritoScreen(
                         viewModel.vaciarCarrito()
                         navController.popBackStack()
                     },
-                    modifier = Modifier.fillMaxWidth().height(50.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
                 ) {
                     Text("Pagar", style = MaterialTheme.typography.titleMedium)
                 }

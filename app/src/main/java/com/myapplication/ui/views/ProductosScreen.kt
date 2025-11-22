@@ -30,7 +30,7 @@ import com.myapplication.viewmodel.PostUsuarioViewModel
 fun ProductosScreen(
     navController: NavController,
     productoViewModel: ProductoViewModel = viewModel(),
-    usuarioViewModel: PostUsuarioViewModel = viewModel() 
+    usuarioViewModel: PostUsuarioViewModel
 ) {
 
     val context = LocalContext.current
@@ -52,21 +52,21 @@ fun ProductosScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.volver),
                             contentDescription = "Volver",
-                            tint = Color(0xFFFFFFFF)
+                            tint = Color.White
                         )
                     }
                 },
                 actions = {
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+
                         IconButton(onClick = { navController.navigate("carrito") }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.carrito),
                                 contentDescription = "Carrito",
-                                tint = Color(0xFFFFFFFF)
+                                tint = Color.White
                             )
                         }
+
                         Text(
                             text = "(${carrito.size})",
                             color = Color.White,
@@ -75,72 +75,82 @@ fun ProductosScreen(
                         )
                     }
                 }
-
             )
         }
     ) { padding ->
 
-        if (errorProductos != null) {
-            Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                Text(text = "Error al cargar productos: $errorProductos")
+        when {
+            errorProductos != null -> {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text("Error al cargar productos: $errorProductos")
+                }
             }
-        } else if (productos.isEmpty()) {
-            Box(modifier = Modifier.fillMaxSize().padding(padding), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator() // Muestra un spinner mientras carga
+
+            productos.isEmpty() -> {
+                Box(
+                    modifier = Modifier.fillMaxSize().padding(padding),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
             }
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(padding)
-                    .padding(18.dp)
-            ) {
 
+            else -> {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(padding)
+                        .padding(18.dp)
+                ) {
+                    items(productos) { producto ->
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 10.dp),
+                            elevation = CardDefaults.cardElevation(6.dp)
+                        ) {
+                            Column(modifier = Modifier.padding(18.dp)) {
 
-                items(productos) { producto ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 10.dp),
-                        elevation = CardDefaults.cardElevation(6.dp)
-                    ) {
-                        Column(modifier = Modifier.padding(18.dp)) {
-
-                            AsyncImage(
-                                model = producto.imagen, // Carga la URL
-                                contentDescription = producto.nombre,
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(180.dp),
-                                contentScale = ContentScale.Fit,
-                                placeholder = painterResource(id = R.drawable.pc2)
-                            )
-
-                            Spacer(Modifier.height(6.dp))
-                            Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
-                            Spacer(Modifier.height(6.dp))
-
-                            Text(
-                                "$${producto.precio}",
-                                style = MaterialTheme.typography.bodyLarge,
-                                fontWeight = FontWeight.SemiBold
-                            )
-
-                            Spacer(Modifier.height(6.dp))
-                            Text(producto.descripcion, style = MaterialTheme.typography.bodySmall)
-                            Spacer(Modifier.height(6.dp))
-
-                            Button(
-                                onClick = {  mostrarNotificacion(
-                                    context = context,
-                                    titulo = "¡Producto agregado al carrito!",
-                                    mensaje = "¡Sigue explorando productos de nuestra tienda o completa tu pago de forma rápida! 🎮"
+                                AsyncImage(
+                                    model = producto.imagen,
+                                    contentDescription = producto.nombre,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(180.dp),
+                                    contentScale = ContentScale.Fit,
+                                    placeholder = painterResource(id = R.drawable.pc2)
                                 )
-                                    usuarioViewModel.agregarAlCarrito(producto)
-                                },
-                                modifier = Modifier.fillMaxWidth()
-                            ){
-                                Text("Agregar al carrito")
+
+                                Spacer(Modifier.height(6.dp))
+                                Text(producto.nombre, style = MaterialTheme.typography.titleMedium)
+                                Spacer(Modifier.height(6.dp))
+
+                                Text(
+                                    "$${producto.precio}",
+                                    style = MaterialTheme.typography.bodyLarge,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+
+                                Spacer(Modifier.height(6.dp))
+                                Text(producto.descripcion, style = MaterialTheme.typography.bodySmall)
+                                Spacer(Modifier.height(6.dp))
+
+                                Button(
+                                    onClick = {
+                                        mostrarNotificacion(
+                                            context = context,
+                                            titulo = "¡Producto agregado al carrito!",
+                                            mensaje = "Sigue explorando productos o finaliza tu compra 🎮"
+                                        )
+                                        usuarioViewModel.agregarAlCarrito(producto)
+                                    },
+                                    modifier = Modifier.fillMaxWidth()
+                                ) {
+                                    Text("Agregar al carrito")
+                                }
                             }
                         }
                     }

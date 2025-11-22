@@ -1,43 +1,37 @@
 package com.myapplication
 
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.runtime.Composable
-import androidx.navigation.compose.rememberNavController
-import com.myapplication.navigation.AppNavigation
-import com.myapplication.ui.theme.MyAppNavegaValidaTheme // O el nombre de tu tema
 import android.Manifest
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.core.content.ContextCompat
-
-
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.myapplication.navigation.AppNavigation
+import com.myapplication.repository.UsuarioRepository
+import com.myapplication.viewmodel.PostUsuarioViewModel
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
 
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
         createNotificationChannel(applicationContext)
-
-
         solicitarPermisos()
 
-        // Iniciar Compose
         setContent {
-            MyAppNavegaValidaTheme {
-                // Modificado: Llama a MyApp() sin parámetros
-                MyApp()
-            }
+            MyApp()
         }
     }
 
@@ -53,7 +47,6 @@ class MainActivity : ComponentActivity() {
         ) {
             requestLocationLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             val requestNotifLauncher =
@@ -84,10 +77,19 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-
 @Composable
 fun MyApp() {
+
+    val viewModel = remember {
+        PostUsuarioViewModel(
+            repository = UsuarioRepository()
+        )
+    }
+
     val navController = rememberNavController()
 
-    AppNavigation(navController)
+    AppNavigation(
+        navController = navController,
+        viewModel = viewModel
+    )
 }

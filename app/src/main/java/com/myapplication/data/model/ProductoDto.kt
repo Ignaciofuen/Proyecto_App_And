@@ -1,7 +1,7 @@
 package com.myapplication.data.model
 
 data class ProductoDto(
-    val id: Long,
+    val id: Int,
     val nombre: String,
     val descripcion: String,
     val categoria: String,

@@ -24,36 +24,38 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel // <-- IMPORTA VIEWMODEL
 import androidx.navigation.NavController
 import com.myapplication.R
-import com.myapplication.viewmodel.PostUsuarioViewModel 
+import com.myapplication.viewmodel.PostUsuarioViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AdminScreen(
     navController: NavController,
-    viewModel: PostUsuarioViewModel = viewModel()
+    viewModel: PostUsuarioViewModel
 ) {
 
     val usuario by viewModel.usuarioActual.collectAsState()
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text("ADMINISTRADOR") },
+            TopAppBar(
+                title = { Text("ADMINISTRADOR") },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 actions = {
-                    // BOTÓN DE LOGOUT ACTUALIZADO
                     IconButton(onClick = {
-                        viewModel.logout() // Llama al ViewModel
-                        navController.navigate("login") { // Navega
+                        viewModel.logout()
+
+                        navController.navigate("login") {
                             popUpTo("admin") { inclusive = true }
+                            launchSingleTop = true
                         }
                     }) {
                         Icon(
                             painter = painterResource(id = R.drawable.logout),
                             contentDescription = "Logout",
-                            tint = Color(0xFFFFFFFF)
+                            tint = Color.White
                         )
                     }
                 }
@@ -74,7 +76,6 @@ fun AdminScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
             usuario?.let {
                 Text(
                     text = "Has iniciado sesión como:",
@@ -89,7 +90,7 @@ fun AdminScreen(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            Button(onClick = {navController.navigate("productosAdmin") }) {
+            Button(onClick = { navController.navigate("productosAdmin") }) {
                 Text("Administrar productos")
             }
         }

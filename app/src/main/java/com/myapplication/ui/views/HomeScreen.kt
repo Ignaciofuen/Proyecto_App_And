@@ -43,7 +43,7 @@ import java.util.Locale
 @Composable
 fun HomeScreen(
     navController: NavController,
-    viewModel: PostUsuarioViewModel = viewModel()
+    viewModel: PostUsuarioViewModel
 ) {
     val context = LocalContext.current
     val fusedLocationClient = remember {
@@ -51,12 +51,11 @@ fun HomeScreen(
     }
 
     var ubicacion by remember { mutableStateOf<String?>(null) }
-
     val usuario by viewModel.usuarioActual.collectAsState()
 
-
     LaunchedEffect(Unit) {
-        if (ContextCompat.checkSelfPermission(
+        if (
+            ContextCompat.checkSelfPermission(
                 context,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
@@ -66,13 +65,15 @@ fun HomeScreen(
                     try {
                         val geocoder = Geocoder(context, Locale.getDefault())
                         val direcciones = geocoder.getFromLocation(location.latitude, location.longitude, 1)
-                        if (!direcciones.isNullOrEmpty()) {
+
+                        ubicacion = if (!direcciones.isNullOrEmpty()) {
                             val ciudad = direcciones[0].locality ?: "Ciudad desconocida"
                             val pais = direcciones[0].countryName ?: "País desconocido"
-                            ubicacion = "$ciudad, $pais"
+                            "$ciudad, $pais"
                         } else {
-                            ubicacion = "Ubicación no disponible"
+                            "Ubicación no disponible"
                         }
+
                     } catch (e: Exception) {
                         ubicacion = "Error obteniendo ubicación"
                         e.printStackTrace()
@@ -95,10 +96,10 @@ fun HomeScreen(
                     titleContentColor = MaterialTheme.colorScheme.onSecondary
                 ),
                 actions = {
-                    // 5. BOTÓN DE LOGOUT ACTUALIZADO
                     IconButton(onClick = {
-                        viewModel.logout() // Llama al ViewModel
-                        navController.navigate("login") { // Navega
+                        viewModel.logout()
+
+                        navController.navigate("login") {
                             popUpTo("home") { inclusive = true }
                         }
                     }) {
@@ -112,37 +113,49 @@ fun HomeScreen(
             )
         }
     ) { padding ->
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
                 .padding(16.dp),
-            verticalArrangement = Arrangement.Center ,
+            verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text("¡Bienvenido a Level-Up!", style = MaterialTheme.typography.headlineMedium)
+
+            Text(
+                "¡Bienvenido a Level-Up!",
+                style = MaterialTheme.typography.headlineMedium
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Image(
                 painter = painterResource(id = R.drawable.levelupgamerimg),
                 contentDescription = "Logo de bienvenida",
-                modifier = Modifier.height(400.dp).fillMaxWidth(0.7f),
+                modifier = Modifier
+                    .height(400.dp)
+                    .fillMaxWidth(0.7f),
                 contentScale = ContentScale.Fit
             )
 
-
+            // Usuario actual
             usuario?.let {
-                Text("Has iniciado sesión como:", style = MaterialTheme.typography.bodyMedium)
-                Text(it.email, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Bold)
+                Text(
+                    "Has iniciado sesión como:",
+                    style = MaterialTheme.typography.bodyMedium
+                )
+                Text(
+                    it.email,
+                    style = MaterialTheme.typography.bodyLarge,
+                    fontWeight = FontWeight.Bold
+                )
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             Button(
-                onClick = {
-                    navController.navigate("productos")
-                },
+                onClick = { navController.navigate("productos") },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary
@@ -161,11 +174,12 @@ fun HomeScreen(
             ) {
                 Text("Novedades")
             }
+
             Spacer(modifier = Modifier.height(16.dp))
 
             ubicacion?.let {
                 Text(
-                    text = "\uD83D\uDCCD $it",
+                    text = "📍 $it",
                     style = MaterialTheme.typography.bodyMedium,
                     color = Color.Gray
                 )
@@ -173,3 +187,4 @@ fun HomeScreen(
         }
     }
 }
+
