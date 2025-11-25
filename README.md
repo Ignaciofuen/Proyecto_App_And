@@ -30,4 +30,24 @@ Para el usuario administrador 👑:
 - `🔔 Notificaciones`: Se implementó usando FusedLocationProvider de Google Play Services para obtener la ubicación del usuario de manera eficiente. Se utiliza Geocoder para convertir las coordenadas (latitud y longitud) en una ubicación legible (ciudad y país).
 - `📍 Geolocalización`: Se creó un canal de notificaciones (NotificationChannel) para manejar notificaciones locales. Se implementó una función global mostrarNotificacion que se llama desde los composables para mostrar alertas al usuario, como “Nuevo catálogo disponible”. Las notificaciones respetan los permisos de Android 13+ (POST_NOTIFICATIONS) y se integran con la UI de manera segura.
   
-*Los permisos se solicitan dinámicamente según la versión de Android y se muestra la ubicación en la interfaz.
+Los permisos se solicitan dinámicamente según la versión de Android y se muestra la ubicación en la interfaz.
+
+## Backend desplegado en la nube ☁️
+Nuestro backend (Java + Spring Boot) está desplegado en una instancia en la nube.
+Actualmente está configurado para iniciar automáticamente cuando se inicia la máquina.
+
+## Integración App ↔ Backend 🔄 
+Toda la comunicación se hace utilizando Retrofit
+
+## Tests del Proyecto 📘
+El proyecto incluye pruebas unitarias y pruebas instrumentadas para garantizar la calidad del código.
+
+✔️ Pruebas de lógica de negocio (ViewModel)
+Framework utilizado: JUnit 4/5, Kotest, MockK.
+
+Se prueban:
+- Registro de usuarios
+- Login
+- Manejo de errores
+- Estados del ViewModel
+- Validaciones
